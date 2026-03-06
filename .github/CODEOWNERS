@@ -1,0 +1,17 @@
+# CODEOWNERS
+# These owners are automatically requested for review when someone opens a PR
+# that modifies the listed files or directories.
+#
+# Replace @parklaus1078 with your actual GitHub username.
+
+# Agent instruction files — review required for all changes
+.agents/    @parklaus1078
+
+# Coding rules — changes affect all agents that reference them
+.rules/     @parklaus1078
+
+# Scripts — core automation logic
+scripts/    @parklaus1078
+
+# Catch-all: any file not matched above
+*           @parklaus1078
