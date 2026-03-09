@@ -155,8 +155,19 @@ echo ""
 # ── claude 실행 ──────────────────────────────────────────────
 # --append-system-prompt: Claude Code 기본값을 유지하면서 CLAUDE.md를 추가
 # (--system-prompt 사용 시 Claude Code 내장 도구 설명이 제거되므로 사용 금지)
+
+# 대화형 모드로 시작 (--print 제거)
+echo "📝 초기 프롬프트를 전달합니다..."
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "$INITIAL_PROMPT"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
 exec claude \
     --model claude-sonnet-4-5 \
     --append-system-prompt "$(cat "$CLAUDE_MD")" \
     --allowedTools "Bash" "Read" "Edit" "Write" \
-    --print "$INITIAL_PROMPT"
+    <<EOF
+$INITIAL_PROMPT
+EOF
