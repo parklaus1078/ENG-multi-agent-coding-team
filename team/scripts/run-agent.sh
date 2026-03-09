@@ -155,8 +155,17 @@ echo ""
 # ── Execute claude ──────────────────────────────────────────────
 # --append-system-prompt: Keep Claude Code defaults while adding CLAUDE.md
 # (--system-prompt would remove Claude Code's built-in tool descriptions, so don't use it)
+echo "📝 Handing over the initial prompt to the agent..."
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "$INITIAL_PROMPT"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
 exec claude \
     --model claude-sonnet-4-5 \
     --append-system-prompt "$(cat "$CLAUDE_MD")" \
     --allowedTools "Bash" "Read" "Edit" "Write" \
-    --print "$INITIAL_PROMPT"
+    <<EOF
+$INITIAL_PROMPT
+EOF
