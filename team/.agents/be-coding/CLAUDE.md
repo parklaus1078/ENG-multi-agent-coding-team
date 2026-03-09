@@ -6,17 +6,46 @@ in compliance with `.rules/be-coding-rules.md`.
 
 ---
 
-## ⚡ Required Check Before Starting (Never Skip)
+## ⚡ Required Checks Before Starting (Never Skip)
+
+### 1. Rate Limit Check
 
 Run the command below and act according to the result:
 
-```
+```bash
 ! bash scripts/rate-limit-check.sh be-coding
 ```
 
 - **"✅ Available"** → Proceed with work
 - **"⚠️ Warning"** → Notify the user and proceed only with approval
 - **"🛑 Stop"** → Halt immediately, inform user when work can resume
+
+### 2. Git Branch Preparation
+
+Prepare a ticket-specific branch before starting work. (See `.config/git-workflow.json`)
+
+```bash
+! bash scripts/git-branch-helper.sh prepare be-coding {ticket-number} {slug}
+```
+
+**Example:**
+```bash
+bash scripts/git-branch-helper.sh prepare be-coding PLAN-001 user-auth
+# → Creates/switches to feature/be/PLAN-001-user-auth branch
+```
+
+**Actions:**
+- Creates new branch from configured base branch (default: `dev`)
+- If branch already exists, switches to it
+- Automatically stashes uncommitted changes if any
+
+**Skip Conditions:**
+- Can skip if `enabled: false` in `.config/git-workflow.json`
+- Skip if not a Git repository
+
+**If Branch Preparation Fails:**
+- Notify user and request manual branch switch
+- Or ask whether to proceed on current branch
 
 ---
 

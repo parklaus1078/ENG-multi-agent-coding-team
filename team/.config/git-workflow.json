@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "description": "Git workflow configuration for coding agents",
+
+  "branch_strategy": {
+    "enabled": true,
+    "base_branch": "dev",
+    "naming_convention": "feature/{ticket-number}-{slug}",
+    "auto_create": true,
+    "auto_checkout": true,
+    "auto_commit": false,
+    "auto_push": false
+  },
+
+  "branch_naming": {
+    "prefix_by_agent": {
+      "be-coding": "feature/be",
+      "fe-coding": "feature/fe",
+      "qa-be": "test/be",
+      "qa-fe": "test/fe"
+    },
+    "examples": {
+      "be-coding": "feature/be/PLAN-001-user-auth",
+      "fe-coding": "feature/fe/PLAN-001-user-auth",
+      "qa-be": "test/be/PLAN-001-user-auth",
+      "qa-fe": "test/fe/PLAN-001-user-auth"
+    }
+  },
+
+  "commit_message_template": {
+    "format": "{type}({ticket}): {description}\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>",
+    "types": {
+      "be-coding": "feat",
+      "fe-coding": "feat",
+      "qa-be": "test",
+      "qa-fe": "test"
+    }
+  },
+
+  "safety": {
+    "check_uncommitted_changes": true,
+    "confirm_before_branch_switch": true,
+    "stash_before_checkout": true
+  },
+
+  "comments": {
+    "base_branch": "Base branch for creating new feature branches",
+    "naming_convention": "{ticket-number} and {slug} are automatically replaced",
+    "auto_create": "Automatically create branch if it doesn't exist",
+    "auto_checkout": "Automatically checkout to the branch",
+    "auto_commit": "Auto-commit after work completion (false recommended - human review first)",
+    "auto_push": "Auto-push after commit (false recommended - human review first)"
+  }
+}

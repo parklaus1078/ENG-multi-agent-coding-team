@@ -218,6 +218,100 @@ FE Coding Agent reads these wireframes to map states to React `useState` and rou
 
 ---
 
+## Git Branch Workflow
+
+Coding agents automatically create and switch to ticket-specific branches before starting work.
+
+### Configuration
+
+Configure branch strategy in `.config/git-workflow.json`:
+
+```json
+{
+  "branch_strategy": {
+    "enabled": true,
+    "base_branch": "dev",
+    "auto_create": true,
+    "auto_checkout": true
+  }
+}
+```
+
+### Branch Naming Convention
+
+| Agent | Branch Pattern | Example |
+|-------|---------------|---------|
+| `be-coding` | `feature/be/{ticket-number}-{slug}` | `feature/be/PLAN-001-user-auth` |
+| `fe-coding` | `feature/fe/{ticket-number}-{slug}` | `feature/fe/PLAN-001-user-auth` |
+| `qa-be` | `test/be/{ticket-number}-{slug}` | `test/be/PLAN-001-user-auth` |
+| `qa-fe` | `test/fe/{ticket-number}-{slug}` | `test/fe/PLAN-001-user-auth` |
+
+### Automatic Behavior
+
+#### On Work Start
+1. Fetch configured base branch (default: `dev`)
+2. Create ticket-specific branch if it doesn't exist
+3. Automatically switch to that branch
+4. Auto-stash uncommitted changes if any
+
+#### On Work Completion
+- Agent does **not** commit (human reviews code first)
+- Provides next step guidance (commit command examples)
+
+### Manual Branch Management
+
+```bash
+# Prepare branch (auto-executed by agents)
+bash scripts/git-branch-helper.sh prepare be-coding PLAN-001 user-auth
+
+# Check current Git status
+bash scripts/git-branch-helper.sh status
+
+# View configuration
+bash scripts/git-branch-helper.sh config
+```
+
+### Typical Workflow
+
+```bash
+# 1. Run BE coding agent
+bash scripts/run-agent.sh be-coding --ticket PLAN-001
+# → Auto-creates/switches to feature/be/PLAN-001-user-auth
+# → Implements code
+
+# 2. Review and commit
+git add .
+git commit -m "feat(PLAN-001): Implement user auth API"
+
+# 3. Run FE coding agent
+bash scripts/run-agent.sh fe-coding --ticket PLAN-001
+# → Auto-creates/switches to feature/fe/PLAN-001-user-auth
+# → Implements code
+
+# 4. Review and commit
+git add .
+git commit -m "feat(PLAN-001): Implement user auth UI"
+
+# 5. Push and create PR
+git push origin feature/be/PLAN-001-user-auth
+git push origin feature/fe/PLAN-001-user-auth
+# Create PR on GitHub
+```
+
+### Disable Branch Strategy
+
+If you don't want automatic branch management:
+
+```json
+{
+  "branch_strategy": {
+    "enabled": false
+  }
+}
+```
+
+---
+
 ## File Naming Convention
 
 All artifacts are prefixed with the Jira ticket number to prevent cross-ticket confusion.
