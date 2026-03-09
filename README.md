@@ -12,20 +12,24 @@ This project is currently in the beta testing phase. We are not responsible for 
 
 ## Overview
 
-You write a Jira ticket(or any ticket based task). The agents handle the rest.
+You provide a project idea. The agents handle the rest.
 
 ```
-Jira Ticket       - Ticket Number, Title, Domain Name, Description, etc.
+Natural Language Project Description
     ↓
-PM Agent          — API spec, UI wireframe, test cases (draft)
+Project Planner Agent — Feature list + priorities + tickets/ creation
     ↓
-Human Review      — inspect and edit all generated artifacts
+Human Review          — Adjust feature scope
     ↓
-BE Coding Agent   — FastAPI implementation
-FE Coding Agent   — Next.js / React implementation
+PM Agent              — Ticket → API spec, UI wireframe, test cases
     ↓
-QA-BE Agent       — pytest test suite
-QA-FE Agent       — Vitest / Jest test suite
+Human Review          — Inspect all artifacts
+    ↓
+BE Coding Agent       — FastAPI implementation
+FE Coding Agent       — Next.js / React implementation
+    ↓
+QA-BE Agent           — pytest test suite
+QA-FE Agent           — Vitest / Jest test suite
     ↓
 Human Review
 ```
@@ -38,7 +42,8 @@ Each agent writes an implementation log explaining every decision it made. Nothi
 
 | Agent | Role | Input | Output |
 |-------|------|-------|--------|
-| `pm` | Requirements authoring | Jira ticket exported in `.md` | API spec, UI spec, wireframe HTML, test cases |
+| `project-planner` | Project breakdown | Natural language description | `tickets/PLAN-XXX-*.md` |
+| `pm` | Requirements authoring | Ticket `.md` | API spec, UI spec, wireframe HTML, test cases |
 | `be-coding` | Backend scaffolding | API spec | FastAPI routes, services, repositories |
 | `fe-coding` | Frontend scaffolding | UI spec + wireframe + API spec | Next.js pages, components, hooks |
 | `qa-be` | Backend test authoring | BE test cases + implemented code | pytest test suite |
@@ -51,6 +56,7 @@ Each agent writes an implementation log explaining every decision it made. Nothi
 ```
 Workspace/
 ├── .agents/                        # Agent instruction files
+│   ├── project-planner/CLAUDE.md
 │   ├── pm/CLAUDE.md
 │   ├── be-coding/CLAUDE.md
 │   ├── fe-coding/CLAUDE.md
@@ -84,6 +90,7 @@ Workspace/
 │   └── PROJ-123-user-login.md
 │
 ├── logs/                           # Implementation logs (agent output)
+│   ├── project-planner/
 │   ├── pm/
 │   ├── be-coding/
 │   ├── fe-coding/
@@ -106,48 +113,85 @@ Workspace/
 
 ## Usage
 
-### 1. Export Jira ticket as Markdown
+### Method A — Start with Project Idea (Recommended)
 
-Export your Jira ticket (Title, Description, Comments) as a `.md` file and place it in `tickets/`.
-
-```
-tickets/PROJ-123.md
-```
-
-### 2. Run PM Agent
+#### 1. Run Project Planner
 
 ```bash
-bash scripts/run-agent.sh pm --ticket-file ./tickets/PROJ-123.md
+bash scripts/run-agent.sh project-planner --project "Todo management app, needs user auth / todo CRUD / category feature"
+```
+
+**⚠️ Context Window Management:**
+Project Planner executes work in **3 phases**:
+
+- **Phase 1**: Project analysis → Feature breakdown → Plan approval → Save to `tickets/.plan-{timestamp}.json`
+- **Phase 2**: Read plan file → Create ticket files (in batches of 5)
+- **Phase 3**: Write log
+
+The agent will present a feature list and priorities, then ask for approval. After approval, ticket files are created in `tickets/`.
+
+```
+tickets/
+├── PLAN-001-user-auth.md
+├── PLAN-002-todo-crud.md
+├── PLAN-003-category.md
+└── .plan-20260309-103000.json  # Temporary plan file (auto-deleted after completion)
+```
+
+**Interruption/Resume:**
+If work is interrupted due to context window overflow:
+
+```bash
+# Resume from Phase 2 (when plan file already exists)
+bash scripts/run-agent.sh project-planner --resume
+```
+
+Review the generated files and edit as needed.
+
+#### 2. Continue with Method B below
+
+---
+
+### Method B — Start with Ticket Files
+
+#### 1. Prepare Ticket Files
+
+Place Jira tickets or manually written `.md` files in `tickets/`.
+
+#### 2. Run PM Agent
+
+```bash
+bash scripts/run-agent.sh pm --ticket-file ./tickets/PLAN-001-user-auth.md
 ```
 
 The PM Agent will generate all requirement artifacts and ask for your approval before writing any files.
 
 **Review the outputs:**
-- `be-api-requirements/PROJ-123-*.md` — API spec
-- `fe-ui-requirements/PROJ-123-*.md` — UI spec
-- `fe-ui-requirements/PROJ-123-*.html` — Wireframe (open in browser to inspect interactions)
-- `be-test-cases/PROJ-123-*.md` — BE test cases
-- `fe-test-cases/PROJ-123-*.md` — FE test cases
+- `be-api-requirements/PLAN-001-*.md` — API spec
+- `fe-ui-requirements/PLAN-001-*.md` — UI spec
+- `fe-ui-requirements/PLAN-001-*.html` — Wireframe (open in browser to inspect interactions)
+- `be-test-cases/PLAN-001-*.md` — BE test cases
+- `fe-test-cases/PLAN-001-*.md` — FE test cases
 
 Edit any file as needed before proceeding.
 
-### 3. Run Coding Agents
+#### 3. Run Coding Agents
 
 ```bash
-bash scripts/run-agent.sh be-coding --ticket PROJ-123
-bash scripts/run-agent.sh fe-coding --ticket PROJ-123
+bash scripts/run-agent.sh be-coding --ticket PLAN-001
+bash scripts/run-agent.sh fe-coding --ticket PLAN-001
 ```
 
 Each agent will present an implementation plan for your approval before writing any code.
 
-### 4. Run QA Agents
+#### 4. Run QA Agents
 
 ```bash
-bash scripts/run-agent.sh qa-be --ticket PROJ-123
-bash scripts/run-agent.sh qa-fe --ticket PROJ-123
+bash scripts/run-agent.sh qa-be --ticket PLAN-001
+bash scripts/run-agent.sh qa-fe --ticket PLAN-001
 ```
 
-### 5. View Logs
+#### 5. View Logs
 
 ```bash
 bash scripts/show-logs.sh          # All agents
@@ -238,5 +282,6 @@ Every agent writes a log immediately after completing work. Logs include:
 Logs are stored in `logs/{agent-name}/` and named with a timestamp and ticket number:
 
 ```
-logs/fe-coding/20250306-143022-PROJ-123-user-login.md
+logs/project-planner/20250306-143022-todo-app.md
+logs/fe-coding/20250306-143022-PLAN-001-user-auth.md
 ```
