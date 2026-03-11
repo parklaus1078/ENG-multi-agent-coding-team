@@ -42,7 +42,7 @@ Each agent writes an implementation log explaining every decision it made. Nothi
 
 | Agent | Role | Input | Output |
 |-------|------|-------|--------|
-| `project-planner` | Project breakdown | Natural language description | `tickets/PLAN-XXX-*.md` |
+| `project-planner` | Project breakdown | Natural language description | `planning-materials/tickets/PLAN-XXX-*.md` |
 | `pm` | Requirements authoring | Ticket `.md` | API spec, UI spec, wireframe HTML, test cases |
 | `be-coding` | Backend scaffolding | API spec | FastAPI routes, services, repositories |
 | `fe-coding` | Frontend scaffolding | UI spec + wireframe + API spec | Next.js pages, components, hooks |
@@ -54,51 +54,54 @@ Each agent writes an implementation log explaining every decision it made. Nothi
 ## Project Structure
 
 ```
-Workspace/
-├── .agents/                        # Agent instruction files
-│   ├── project-planner/CLAUDE.md
-│   ├── pm/CLAUDE.md
-│   ├── be-coding/CLAUDE.md
-│   ├── fe-coding/CLAUDE.md
-│   ├── qa-be/CLAUDE.md
-│   └── qa-fe/CLAUDE.md
+Project Root/
+├── team/                           # Main working directory
+│   ├── .agents/                    # Agent instruction files
+│   │   ├── project-planner/CLAUDE.md
+│   │   ├── pm/CLAUDE.md
+│   │   ├── be-coding/CLAUDE.md
+│   │   ├── fe-coding/CLAUDE.md
+│   │   ├── qa-be/CLAUDE.md
+│   │   └── qa-fe/CLAUDE.md
+│   │
+│   ├── .rules/                     # Coding standards (referenced by agents)
+│   │   ├── be-coding-rules.md
+│   │   └── fe-coding-rules.md
+│   │
+│   ├── .config/                    # Configuration files
+│   │   └── git-workflow.json
+│   │
+│   ├── scripts/                    # Utility scripts
+│   │   ├── run-agent.sh            # Agent launcher
+│   │   ├── rate-limit-check.sh     # Claude Max rate limit check
+│   │   ├── parse_usage.py          # Usage tracking
+│   │   ├── show-logs.sh            # View implementation logs
+│   │   ├── git-branch-helper.sh    # Git branch management
+│   │   └── create-dev-log.sh       # Development log creation
+│   │
+│   ├── planning-materials/         # PM outputs
+│   │   ├── tickets/                # Ticket files (Project Planner output)
+│   │   │   └── PLAN-001-user-auth.md
+│   │   ├── be-api-requirements/    # API specs (PM Agent output)
+│   │   │   └── PLAN-001-user-auth.md
+│   │   ├── fe-ui-requirements/     # UI specs and wireframes
+│   │   │   ├── PLAN-001-login-ui-spec.md
+│   │   │   └── PLAN-001-login-wireframe.html
+│   │   ├── be-test-cases/          # BE test cases
+│   │   │   └── PLAN-001-user-auth.md
+│   │   └── fe-test-cases/          # FE test cases
+│   │       └── PLAN-001-user-auth.md
+│   │
+│   └── applications/               # Actual application code
+│       ├── be-project/             # FastAPI backend
+│       ├── fe-project/             # Next.js frontend
+│       └── logs/                   # Implementation logs (coding agent output)
+│           ├── be-coding/
+│           ├── fe-coding/
+│           ├── qa-be/
+│           └── qa-fe/
 │
-├── .rules/                         # Coding standards (referenced by agents)
-│   ├── be-coding-rules.md
-│   └── fe-coding-rules.md
-│
-├── scripts/                        # Utility scripts
-│   ├── run-agent.sh                # Agent launcher
-│   ├── rate-limit-check.sh         # Claude Max rate limit check
-│   ├── parse_usage.py              # Usage tracking
-│   └── show-logs.sh                # View implementation logs
-│
-├── tickets/                        # Jira ticket exports
-│   └── PROJ-123.md
-│
-├── be-api-requirements/            # API specs (PM Agent output)
-│   └── PROJ-123-user-login.md
-│
-├── fe-ui-requirements/             # UI specs and wireframes (PM Agent output)
-│   ├── PROJ-123-login-ui-spec.md
-│   └── PROJ-123-login-wireframe.html
-│
-├── be-test-cases/                  # BE test cases (PM Agent output)
-│   └── PROJ-123-user-login.md
-│
-├── fe-test-cases/                  # FE test cases (PM Agent output)
-│   └── PROJ-123-user-login.md
-│
-├── logs/                           # Implementation logs (agent output)
-│   ├── project-planner/
-│   ├── pm/
-│   ├── be-coding/
-│   ├── fe-coding/
-│   ├── qa-be/
-│   └── qa-fe/
-│
-├── be-project/                     # FastAPI backend
-└── fe-project/                     # Next.js frontend
+└── logs-agent_dev/                 # Development logs (root level)
 ```
 
 ---
@@ -118,20 +121,21 @@ Workspace/
 #### 1. Run Project Planner
 
 ```bash
+cd team
 bash scripts/run-agent.sh project-planner --project "Todo management app, needs user auth / todo CRUD / category feature"
 ```
 
 **⚠️ Context Window Management:**
 Project Planner executes work in **3 phases**:
 
-- **Phase 1**: Project analysis → Feature breakdown → Plan approval → Save to `tickets/.plan-{timestamp}.json`
+- **Phase 1**: Project analysis → Feature breakdown → Plan approval → Save to `planning-materials/tickets/.plan-{timestamp}.json`
 - **Phase 2**: Read plan file → Create ticket files (in batches of 5)
 - **Phase 3**: Write log
 
-The agent will present a feature list and priorities, then ask for approval. After approval, ticket files are created in `tickets/`.
+The agent will present a feature list and priorities, then ask for approval. After approval, ticket files are created in `planning-materials/tickets/`.
 
 ```
-tickets/
+planning-materials/tickets/
 ├── PLAN-001-user-auth.md
 ├── PLAN-002-todo-crud.md
 ├── PLAN-003-category.md
@@ -142,7 +146,7 @@ tickets/
 If work is interrupted due to context window overflow:
 
 ```bash
-# Resume from Phase 2 (when plan file already exists)
+cd team
 bash scripts/run-agent.sh project-planner --resume
 ```
 
@@ -156,28 +160,30 @@ Review the generated files and edit as needed.
 
 #### 1. Prepare Ticket Files
 
-Place Jira tickets or manually written `.md` files in `tickets/`.
+Place Jira tickets or manually written `.md` files in `team/planning-materials/tickets/`.
 
 #### 2. Run PM Agent
 
 ```bash
-bash scripts/run-agent.sh pm --ticket-file ./tickets/PLAN-001-user-auth.md
+cd team
+bash scripts/run-agent.sh pm --ticket-file ./planning-materials/tickets/PLAN-001-user-auth.md
 ```
 
 The PM Agent will generate all requirement artifacts and ask for your approval before writing any files.
 
 **Review the outputs:**
-- `be-api-requirements/PLAN-001-*.md` — API spec
-- `fe-ui-requirements/PLAN-001-*.md` — UI spec
-- `fe-ui-requirements/PLAN-001-*.html` — Wireframe (open in browser to inspect interactions)
-- `be-test-cases/PLAN-001-*.md` — BE test cases
-- `fe-test-cases/PLAN-001-*.md` — FE test cases
+- `planning-materials/be-api-requirements/PLAN-001-*.md` — API spec
+- `planning-materials/fe-ui-requirements/PLAN-001-*.md` — UI spec
+- `planning-materials/fe-ui-requirements/PLAN-001-*.html` — Wireframe (open in browser to inspect interactions)
+- `planning-materials/be-test-cases/PLAN-001-*.md` — BE test cases
+- `planning-materials/fe-test-cases/PLAN-001-*.md` — FE test cases
 
 Edit any file as needed before proceeding.
 
 #### 3. Run Coding Agents
 
 ```bash
+cd team
 bash scripts/run-agent.sh be-coding --ticket PLAN-001
 bash scripts/run-agent.sh fe-coding --ticket PLAN-001
 ```
@@ -187,6 +193,7 @@ Each agent will present an implementation plan for your approval before writing 
 #### 4. Run QA Agents
 
 ```bash
+cd team
 bash scripts/run-agent.sh qa-be --ticket PLAN-001
 bash scripts/run-agent.sh qa-fe --ticket PLAN-001
 ```
@@ -194,8 +201,9 @@ bash scripts/run-agent.sh qa-fe --ticket PLAN-001
 #### 5. View Logs
 
 ```bash
-bash scripts/show-logs.sh          # All agents
-bash scripts/show-logs.sh be-coding  # Specific agent
+cd team
+bash scripts/show-logs.sh              # All agents
+bash scripts/show-logs.sh be-coding    # Specific agent
 ```
 
 ---
@@ -261,6 +269,8 @@ Configure branch strategy in `.config/git-workflow.json`:
 ### Manual Branch Management
 
 ```bash
+cd team
+
 # Prepare branch (auto-executed by agents)
 bash scripts/git-branch-helper.sh prepare be-coding PLAN-001 user-auth
 
@@ -274,6 +284,8 @@ bash scripts/git-branch-helper.sh config
 ### Typical Workflow
 
 ```bash
+cd team
+
 # 1. Run BE coding agent
 bash scripts/run-agent.sh be-coding --ticket PLAN-001
 # → Auto-creates/switches to feature/be/PLAN-001-user-auth
@@ -342,6 +354,7 @@ Every agent runs `rate-limit-check.sh` before starting work:
 To check current usage manually:
 
 ```bash
+cd team
 bash scripts/rate-limit-check.sh
 ```
 
@@ -373,9 +386,9 @@ Every agent writes a log immediately after completing work. Logs include:
 - Alternative approaches considered and trade-offs
 - Notes for the reviewer
 
-Logs are stored in `logs/{agent-name}/` and named with a timestamp and ticket number:
+Logs are stored in `applications/logs/{agent-name}/` and named with a timestamp and ticket number:
 
 ```
-logs/project-planner/20250306-143022-todo-app.md
-logs/fe-coding/20250306-143022-PLAN-001-user-auth.md
+applications/logs/project-planner/20250306-143022-todo-app.md
+applications/logs/fe-coding/20250306-143022-PLAN-001-user-auth.md
 ```

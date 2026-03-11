@@ -38,11 +38,11 @@ Feature slug is the feature name converted to lowercase English with hyphens (e.
 
 | File | Example |
 |------|---------|
-| `be-api-requirements/{ticket-number}-{slug}.md` | `be-api-requirements/PROJ-123-user-login.md` |
-| `fe-ui-requirements/{ticket-number}-{slug}.md` | `fe-ui-requirements/PROJ-123-user-login.md` |
-| `fe-ui-requirements/{ticket-number}-{slug}.html` | `fe-ui-requirements/PROJ-123-user-login.html` |
-| `be-test-cases/{ticket-number}-{slug}.md` | `be-test-cases/PROJ-123-user-login.md` |
-| `fe-test-cases/{ticket-number}-{slug}.md` | `fe-test-cases/PROJ-123-user-login.md` |
+| `planning-materials/be-api-requirements/{ticket-number}-{slug}.md` | `planning-materials/be-api-requirements/PROJ-123-user-login.md` |
+| `planning-materials/fe-ui-requirements/{ticket-number}-{slug}.md` | `planning-materials/fe-ui-requirements/PROJ-123-user-login.md` |
+| `planning-materials/fe-ui-requirements/{ticket-number}-{slug}.html` | `planning-materials/fe-ui-requirements/PROJ-123-user-login.html` |
+| `planning-materials/be-test-cases/{ticket-number}-{slug}.md` | `planning-materials/be-test-cases/PROJ-123-user-login.md` |
+| `planning-materials/fe-test-cases/{ticket-number}-{slug}.md` | `planning-materials/fe-test-cases/PROJ-123-user-login.md` |
 
 ---
 
@@ -69,11 +69,11 @@ Show the user the list of files to be created and a summary of their contents, t
 
 ```
 Files to be created:
-- be-api-requirements/PROJ-123-user-login.md
-- fe-ui-requirements/PROJ-123-user-login.md
-- fe-ui-requirements/PROJ-123-user-login.html
-- be-test-cases/PROJ-123-user-login.md
-- fe-test-cases/PROJ-123-user-login.md
+- planning-materials/be-api-requirements/PROJ-123-user-login.md
+- planning-materials/fe-ui-requirements/PROJ-123-user-login.md
+- planning-materials/fe-ui-requirements/PROJ-123-user-login.html
+- planning-materials/be-test-cases/PROJ-123-user-login.md
+- planning-materials/fe-test-cases/PROJ-123-user-login.md
 
 Key APIs: POST /auth/login, POST /auth/logout
 Key screens: Login form, Main page (after successful login)
@@ -84,7 +84,7 @@ User flow: Login success → enter main / Login failure → show error message
 
 After approval, generate files in the order below.
 
-**1. be-api-requirements/{slug}.md**
+**1. planning-materials/be-api-requirements/{slug}.md**
 
 Write using the structure below:
 
@@ -117,7 +117,7 @@ Write using the structure below:
     | error.code | string | INVALID_CREDENTIALS |
     | error.message | string | Invalid email or password. |
 
-**2. fe-ui-requirements/{slug}.md**
+**2. planning-materials/fe-ui-requirements/{slug}.md**
 
 Write using the structure below:
 
@@ -152,7 +152,7 @@ Write using the structure below:
     - Password under 8 characters → client-side validation
     - During API call → button disabled + loading indicator
 
-**3. fe-ui-requirements/{slug}.html**
+**3. planning-materials/fe-ui-requirements/{slug}.html**
 
 Determine whether to use static or interactive HTML based on the criteria below:
 
@@ -221,7 +221,7 @@ Interactive HTML example:
 </html>
 ```
 
-**4. be-test-cases/{slug}.md**
+**4. planning-materials/be-test-cases/{slug}.md**
 
     # {Feature Name} BE Test Cases
 
@@ -240,7 +240,7 @@ Interactive HTML example:
     | TC-BE-004 | Invalid email format | email: notanemail | 400, VALIDATION_ERROR |
     | TC-BE-005 | Password under 8 characters | password: short | 400, VALIDATION_ERROR |
 
-**5. fe-test-cases/{slug}.md**
+**5. planning-materials/fe-test-cases/{slug}.md**
 
     # {Feature Name} FE Test Cases
 
@@ -270,7 +270,7 @@ Interactive HTML example:
 
 ## 📝 Log Writing Rules (Never Skip)
 
-**File path**: `logs/pm/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
+**File path**: `applications/logs/pm/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
 
 Log template:
 
@@ -281,11 +281,11 @@ Log template:
     - **Date**: {YYYY-MM-DD HH:mm:ss}
     - **User Request**: {verbatim request}
     - **Created Files**:
-      - be-api-requirements/{ticket-number}-{slug}.md
-      - fe-ui-requirements/{ticket-number}-{slug}.md
-      - fe-ui-requirements/{ticket-number}-{slug}.html
-      - be-test-cases/{ticket-number}-{slug}.md
-      - fe-test-cases/{ticket-number}-{slug}.md
+      - planning-materials/be-api-requirements/{ticket-number}-{slug}.md
+      - planning-materials/fe-ui-requirements/{ticket-number}-{slug}.md
+      - planning-materials/fe-ui-requirements/{ticket-number}-{slug}.html
+      - planning-materials/be-test-cases/{ticket-number}-{slug}.md
+      - planning-materials/fe-test-cases/{ticket-number}-{slug}.md
 
     ---
 

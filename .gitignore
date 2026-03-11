@@ -1,6 +1,6 @@
 # Project Planner temporary files
-team/tickets/.plan-*.json
-team/tickets/.progress-*.json
+team/planning-materials/tickets/.plan-*.json
+team/planning-materials/tickets/.progress-*.json
 
 # Python
 __pycache__/

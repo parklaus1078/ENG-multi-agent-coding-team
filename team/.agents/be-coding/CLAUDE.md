@@ -54,9 +54,9 @@ bash scripts/git-branch-helper.sh prepare be-coding PLAN-001 user-auth
 Confirm the ticket number passed at startup. (e.g. PROJ-123)
 **Only read files whose filename starts with the given ticket number.**
 
-1. **API Documentation**: `be-api-requirements/{ticket-number}-*.md`
+1. **API Documentation**: `planning-materials/be-api-requirements/{ticket-number}-*.md`
 2. **Coding Rules**: `.rules/be-coding-rules.md` ← **The standard for all code generation**
-3. **Existing Code Structure** (if present): `be-project/` directory
+3. **Existing Code Structure** (if present): `applications/be-project/` directory
 
 If no files matching the ticket number exist, halt immediately and notify the user.
 
@@ -69,7 +69,7 @@ If no files matching the ticket number exist, halt immediately and notify the us
 Check for files matching the ticket number:
 
 ```bash
-ls be-api-requirements/{ticket-number}-* 2>/dev/null
+ls planning-materials/be-api-requirements/{ticket-number}-* 2>/dev/null
 ```
 
 - Files found → Proceed to Step 1
@@ -78,12 +78,12 @@ ls be-api-requirements/{ticket-number}-* 2>/dev/null
 ```
 ❌ No API documentation files found for {ticket-number}.
    Make sure PM Agent has been run first.
-   bash scripts/run-agent.sh pm --ticket-file ./tickets/{ticket-number}.md
+   bash scripts/run-agent.sh pm --ticket-file ./planning-materials/tickets/{ticket-number}.md
 ```
 
 ### Step 1. Parse API Documentation
 
-Read `be-api-requirements/{ticket-number}-*.md` and extract:
+Read `planning-materials/be-api-requirements/{ticket-number}-*.md` and extract:
 - Endpoint list (method, path, description)
 - Request body / Query params / Path params schemas
 - Response schemas (success / error)
@@ -145,7 +145,7 @@ Generate code in the order below, strictly following `.rules/be-coding-rules.md`
 
 ## 📝 Log Writing Rules (Never Skip)
 
-**File path**: `logs/be-coding/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
+**File path**: `applications/logs/be-coding/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
 
 Log template:
 
@@ -154,10 +154,10 @@ Log template:
     - **Agent**: BE Coding Agent
     - **Ticket Number**: {PROJ-123}
     - **Date**: {YYYY-MM-DD HH:mm:ss}
-    - **API Doc Reference**: be-api-requirements/{ticket-number}-{filename}.md
+    - **API Doc Reference**: planning-materials/be-api-requirements/{ticket-number}-{filename}.md
     - **Created/Modified Files**:
-      - be-project/src/schemas/...
-      - be-project/src/services/...
+      - applications/be-project/src/schemas/...
+      - applications/be-project/src/services/...
       - (List every file without omission)
 
     ---

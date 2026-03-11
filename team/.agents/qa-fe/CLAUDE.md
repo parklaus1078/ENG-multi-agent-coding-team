@@ -28,11 +28,11 @@ Read and understand **all** files and directories below before starting any work
 Confirm the ticket number passed at startup. (e.g. PROJ-123)
 **Only read files whose filename starts with the given ticket number.**
 
-1. **API Documentation**: `be-api-requirements/{ticket-number}-*.md`
-2. **UI Spec**: `fe-ui-requirements/{ticket-number}-*.md`
-3. **UI Wireframe**: `fe-ui-requirements/{ticket-number}-*.html`
+1. **API Documentation**: `planning-materials/be-api-requirements/{ticket-number}-*.md`
+2. **UI Spec**: `planning-materials/fe-ui-requirements/{ticket-number}-*.md`
+3. **UI Wireframe**: `planning-materials/fe-ui-requirements/{ticket-number}-*.html`
 4. **Coding Rules**: `.rules/fe-coding-rules.md`
-5. **Existing Code Structure**: `fe-project/src/`
+5. **Existing Code Structure**: `applications/fe-project/src/`
 
 If no files matching the ticket number exist, halt immediately and notify the user.
 
@@ -45,8 +45,8 @@ If no files matching the ticket number exist, halt immediately and notify the us
 Check for files matching the ticket number:
 
 ```bash
-ls be-api-requirements/{ticket-number}-* 2>/dev/null
-ls fe-ui-requirements/{ticket-number}-* 2>/dev/null
+ls planning-materials/be-api-requirements/{ticket-number}-* 2>/dev/null
+ls planning-materials/fe-ui-requirements/{ticket-number}-* 2>/dev/null
 ```
 
 - Files found → Proceed to Step 1
@@ -55,17 +55,17 @@ ls fe-ui-requirements/{ticket-number}-* 2>/dev/null
 ```
 ❌ No requirement files found for {ticket-number}.
    Make sure PM Agent has been run first.
-   bash scripts/run-agent.sh pm --ticket-file ./tickets/{ticket-number}.md
+   bash scripts/run-agent.sh pm --ticket-file ./planning-materials/tickets/{ticket-number}.md
 ```
 
 ### Step 1. Parse Inputs
 
 Extract the following information from each input source:
 
-- `fe-test-cases/` — Test case list per component/hook
-- `fe-ui-requirements/` — Interaction and state definitions for each screen
-- `be-api-requirements/` — Response schemas for connected APIs → **used to generate MSW mock data**
-- `fe-project/src/` — Signatures and structure of the actual components/hooks under test
+- `planning-materials/fe-test-cases/` — Test case list per component/hook
+- `planning-materials/fe-ui-requirements/` — Interaction and state definitions for each screen
+- `planning-materials/be-api-requirements/` — Response schemas for connected APIs → **used to generate MSW mock data**
+- `applications/fe-project/src/` — Signatures and structure of the actual components/hooks under test
 
 ### Step 2. Draft Test Plan
 
@@ -93,21 +93,21 @@ Generate and modify files in the order below, **strictly following** `.rules/fe-
 **[Initial Setup — First-time project setup only]**
 
 ```text
-0-a. fe-project/tests/setup.ts         — Testing Library + MSW initialization
-0-b. fe-project/tests/mocks/server.ts  — MSW server configuration
+0-a. applications/fe-project/tests/setup.ts         — Testing Library + MSW initialization
+0-b. applications/fe-project/tests/mocks/server.ts  — MSW server configuration
 ```
 
 **[Test Implementation — Every task]**
 
 ```text
-1. fe-project/tests/mocks/api/{domain}.ts
-   — Mock response data that exactly reflects the ApiResponse<T> schema defined in be-api-requirements/
+1. applications/fe-project/tests/mocks/api/{domain}.ts
+   — Mock response data that exactly reflects the ApiResponse<T> schema defined in planning-materials/be-api-requirements/
 
-2. fe-project/tests/components/{domain}/{ComponentName}.test.tsx
+2. applications/fe-project/tests/components/{domain}/{ComponentName}.test.tsx
    — Given-When-Then comment pattern required in every test
    — Must cover all Required Case Types listed below
 
-3. fe-project/tests/hooks/use{Domain}.test.ts
+3. applications/fe-project/tests/hooks/use{Domain}.test.ts
    — Run with renderHook + QueryClientWrapper
    — Given-When-Then comment pattern required in every test
 ```
@@ -129,7 +129,7 @@ As soon as test code writing or modification is complete, **write a QA log immed
 
 ## 📝 Log Writing Rules (Never Skip)
 
-**File path format**: `logs/qa-fe/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
+**File path format**: `applications/logs/qa-fe/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
 
 Use the template below:
 
@@ -138,11 +138,11 @@ Use the template below:
     - **Agent**: QA-FE Agent
     - **Ticket Number**: {PROJ-123}
     - **Date**: {YYYY-MM-DD HH:mm:ss}
-    - **Test Case Reference**: fe-test-cases/{ticket-number}-{filename}.md
-    - **UI Spec Reference**: fe-ui-requirements/{ticket-number}-{filename}.md
-    - **API Doc Reference**: be-api-requirements/{ticket-number}-{filename}.md
+    - **Test Case Reference**: planning-materials/fe-test-cases/{ticket-number}-{filename}.md
+    - **UI Spec Reference**: planning-materials/fe-ui-requirements/{ticket-number}-{filename}.md
+    - **API Doc Reference**: planning-materials/be-api-requirements/{ticket-number}-{filename}.md
     - **Created/Modified Files**:
-      - fe-project/tests/...
+      - applications/fe-project/tests/...
       - (List every file without omission)
 
     ---

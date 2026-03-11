@@ -33,14 +33,14 @@ Natural language project description passed via `run-agent.sh --project` flag.
 
 ## 📤 Output
 
-One ticket file per feature in the `tickets/` directory.
+One ticket file per feature in the `planning-materials/tickets/` directory.
 
 **File naming format**: `PLAN-{3-digit number}-{feature-slug}.md`
 
-The number starts from the next number after the highest existing `PLAN-*` file in `tickets/`:
+The number starts from the next number after the highest existing `PLAN-*` file in `planning-materials/tickets/`:
 
 ```bash
-ls tickets/PLAN-* 2>/dev/null | sort
+ls planning-materials/planning-materials/tickets/PLAN-* 2>/dev/null | sort
 # PLAN-001, PLAN-002 exist → next starts at PLAN-003
 # No PLAN-* files → start at PLAN-001
 ```
@@ -114,7 +114,7 @@ If the user requests changes (add/remove/merge features), revise and present aga
 
 **Immediately after approval**, save the plan to a JSON file. This file will be referenced in Phase 2 for ticket creation.
 
-**File location**: `tickets/.plan-{YYYYMMDD-HHmmss}.json`
+**File location**: `planning-materials/tickets/.plan-{YYYYMMDD-HHmmss}.json`
 
 ```json
 {
@@ -158,7 +158,7 @@ Would you like to proceed to the next step?
 
 #### Step 2-1. Read Plan File
 
-Find and read the most recent `.plan-*.json` file in the `tickets/` directory.
+Find and read the most recent `.plan-*.json` file in the `planning-materials/tickets/` directory.
 
 ```bash
 ls -t tickets/.plan-*.json | head -1
@@ -178,7 +178,7 @@ If no file exists, output error and halt:
 
 For each batch:
 1. Create only the tickets in that batch
-2. Save progress to `tickets/.progress-{timestamp}.json`
+2. Save progress to `planning-materials/tickets/.progress-{timestamp}.json`
 3. Notify user of progress
 4. Ask whether to proceed to next batch
 
@@ -195,7 +195,7 @@ For each batch:
 
 #### Step 2-3. Create Ticket Files
 
-After approval, create files in `tickets/` using the following template.
+After approval, create files in `planning-materials/tickets/` using the following template.
 
 ```markdown
 # {Ticket Number}: {Feature Name}
@@ -241,8 +241,8 @@ After each batch completes:
 ```
 ✅ Batch {N}/{Total Batches} Complete ({Completed Tickets}/{Total Tickets} tickets)
 Created files:
-- tickets/PLAN-001-user-auth.md
-- tickets/PLAN-002-todo-crud.md
+- planning-materials/tickets/PLAN-001-user-auth.md
+- planning-materials/tickets/PLAN-002-todo-crud.md
 ...
 
 Proceed to next batch? (yes/no)
@@ -266,7 +266,7 @@ Proceed to next batch? (yes/no)
 
 ## 📝 Log Writing Rules (Never Skip)
 
-**File location**: `logs/project-planner/{YYYYMMDD-HHmmss}-{project-slug}.md`
+**File location**: `applications/logs/project-planner/{YYYYMMDD-HHmmss}-{project-slug}.md`
 
 Log template:
 
@@ -276,8 +276,8 @@ Log template:
     - **Date**: {YYYY-MM-DD HH:mm:ss}
     - **User Input**: {verbatim}
     - **Generated Files**:
-      - tickets/PLAN-001-{slug}.md
-      - tickets/PLAN-002-{slug}.md
+      - planning-materials/tickets/PLAN-001-{slug}.md
+      - planning-materials/tickets/PLAN-002-{slug}.md
       - (list all files)
 
     ---
