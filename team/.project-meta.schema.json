@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Project Configuration Schema",
-  "description": "멀티 에이전트 시스템의 프로젝트 타입 및 스택 설정",
+  "description": "Project type and stack configuration for the multi-agent system",
   "type": "object",
   "required": ["project_type", "stack", "created_at"],
   "properties": {
@@ -16,11 +16,11 @@
         "library",
         "data-pipeline"
       ],
-      "description": "프로젝트 타입"
+      "description": "Project type"
     },
     "stack": {
       "type": "object",
-      "description": "사용할 기술 스택",
+      "description": "Technology stack to use",
       "oneOf": [
         {
           "properties": {
@@ -164,26 +164,26 @@
     },
     "project_name": {
       "type": "string",
-      "description": "프로젝트 이름"
+      "description": "Project name"
     },
     "project_description": {
       "type": "string",
-      "description": "프로젝트 설명"
+      "description": "Project description"
     },
     "created_at": {
       "type": "string",
       "format": "date-time",
-      "description": "프로젝트 생성 시간"
+      "description": "Project creation time"
     },
     "stack_initialized_at": {
       "type": "string",
       "format": "date-time",
-      "description": "스택 초기화 완료 시간"
+      "description": "Time when stack initialization was completed"
     },
     "coding_rules_status": {
       "type": "string",
       "enum": ["auto-generated", "verified", "community"],
-      "description": "코딩 룰 상태"
+      "description": "Status of coding rules"
     },
     "git_workflow": {
       "type": "object",

@@ -1,27 +1,27 @@
-# Team 작업 디렉토리
+# Team Working Directory
 
-이 디렉토리는 멀티 에이전트 시스템의 **작업 디렉토리**입니다. 모든 명령어는 여기서 실행됩니다.
-
----
-
-## 📍 현재 위치
-
-```
-KR-multi-agent-coding-team/          # 시스템 루트
-└── team/                            # ← 여기 (작업 디렉토리)
-```
+This directory is the **working directory** for the multi-agent system. All commands are executed here.
 
 ---
 
-## 🚀 빠른 시작
+## 📍 Current Location
 
-### 1. 프로젝트 초기화
+```
+KR-multi-agent-coding-team/          # System root
+└── team/                            # ← here (working directory)
+```
+
+---
+
+## 🚀 Quick Start
+
+### 1. Initialize a project
 
 ```bash
 bash scripts/init-project.sh --interactive
 ```
 
-### 2. 프로젝트 Git 리포지토리 초기화
+### 2. Initialize the project Git repository
 
 ```bash
 cd projects/{your-project-name}
@@ -30,94 +30,95 @@ git remote add origin https://github.com/your-username/{your-project-name}.git
 cd ../..
 ```
 
-### 3. 에이전트 워크플로우
+### 3. Agent workflow
 
 ```bash
-# Stack 초기화
+# Initialize stack
 bash scripts/run-agent.sh stack-initializer
 
-# 티켓 생성
-bash scripts/run-agent.sh project-planner --project "프로젝트 설명"
+# Create ticket
+bash scripts/run-agent.sh project-planner --project "Project description"
 
-# 명세서 작성
+# Write specification
 bash scripts/run-agent.sh pm --ticket-file projects/{name}/planning/tickets/PLAN-001-*.md
 
-# 코딩
+# Coding
 bash scripts/run-agent.sh coding --ticket PLAN-001
 
-# 테스트
+# Testing
 bash scripts/run-agent.sh qa --ticket PLAN-001
 ```
 
 ---
 
-## 📁 디렉토리 구조
+## 📁 Directory Structure
 
 ```
 team/
-├── .agents/                         # 에이전트 정의 (5개)
+├── .agents/                         # Agent definitions (5)
 │   ├── stack-initializer/
 │   ├── project-planner/
 │   ├── pm/
 │   ├── coding/
 │   └── qa/
 │
-├── .rules/                          # 코딩 룰
-│   ├── general-coding-rules.md      # 범용 원칙
-│   ├── _cache/                      # AI 자동 생성 (24h)
-│   └── _verified/                   # 사람이 검증
+├── .rules/                          # Coding rules
+│   ├── general-coding-rules.md      # General principles
+│   ├── _cache/                      # AI auto-generated (24h)
+│   └── _verified/                   # Human-verified
 │
-├── .config/                         # 시스템 설정
+├── .config/                         # System settings
 │   └── git-workflow.json
 │
-├── scripts/                         # 유틸리티 스크립트
-│   ├── init-project.sh              # 프로젝트 초기화
-│   ├── switch-project.sh            # 프로젝트 전환
-│   ├── run-agent.sh                 # 에이전트 실행
-│   ├── show-logs.sh                 # 로그 조회
-│   ├── git-branch-helper.sh         # Git 브랜치 관리
-│   └── rate-limit-check.sh          # Rate Limit 체크
+├── scripts/                         # Utility scripts
+│   ├── init-project.sh              # Project initialization
+│   ├── switch-project.sh            # Switch project
+│   ├── run-agent.sh                 # Run agents
+│   ├── show-logs.sh                 # View logs
+│   ├── git-branch-helper.sh         # Git branch management
+│   └── rate-limit-check.sh          # Rate limit check
 │
-├── projects/                        # 프로젝트 작업 공간
-│   ├── project-a/                   # 각 프로젝트는 독립 Git 리포지토리
-│   │   ├── .git/                    # ← 프로젝트 자체의 Git
+├── projects/                        # Project workspace
+│   ├── project-a/                   # Each project is an independent Git repo
+│   │   ├── .project-meta.json       # Project stack settings
+│   │   ├── .git/                    # ← Project’s own Git
 │   │   ├── planning/
 │   │   ├── src/
 │   │   └── logs/
 │   └── project-b/
 │       └── ...
 │
-├── .project-config.json             # 현재 활성 프로젝트
-└── README.md                        # 이 파일
+├── .project-config.json             # Current active project
+└── README.md                        # This file
 ```
 
 ---
 
-## 🔄 프로젝트 전환
+## 🔄 Switch Projects
 
-한 시스템에서 여러 프로젝트를 관리할 수 있습니다:
+You can manage multiple projects within a single system:
 
 ```bash
-# 프로젝트 목록
+# Project list
 bash scripts/switch-project.sh --list
 
-# 프로젝트 전환
+# Switch project
 bash scripts/switch-project.sh project-b
 
-# 이제 모든 명령어는 project-b 컨텍스트에서 실행됨
+# Now all commands run in the context of project-b
 bash scripts/run-agent.sh coding --ticket PLAN-005
 ```
 
 ---
 
-## 📚 자세한 문서
+## 📚 Detailed Documentation
 
-- [루트 README.md](../README.md) - 전체 시스템 개요
-- [스크립트 가이드](scripts/README.md) - 각 스크립트 사용법
-- [코딩 룰 가이드](.rules/README.md) - 코딩 룰 시스템
-- [아키텍처 문서](../docs/architecture-final.md) - 상세 아키텍처
+- [Root README.md](../README.md) - System overview
+- [Scripts Guide](scripts/README.md) - Usage for each script
+- [Coding Rules Guide](.rules/README.md) - Coding rules system
+- [Architecture document](../docs/architecture-final.md) - Detailed architecture
 
 ---
 
-**버전**: v0.0.2
-**최종 업데이트**: 2026-03-12
+**Version**: v0.0.2
+**Last updated**: 2026-03-12

@@ -1,8 +1,8 @@
 # Scripts Directory
 
-멀티 에이전트 시스템 유틸리티 스크립트 모음
+Collection of multi-agent system utility scripts.
 
-**실행 위치**: `team/` 디렉토리에서 실행
+**Where to run**: Run from the `team/` directory.
 
 ```bash
 cd team
@@ -11,18 +11,18 @@ bash scripts/run-agent.sh coding --ticket PLAN-001
 
 ---
 
-## 📋 스크립트 목록
+## 📋 Script List
 
-### 프로젝트 관리
+### Project Management
 
 #### `init-project.sh`
-프로젝트 초기화
+Initialize a project.
 
 ```bash
-# 대화형 모드
+# Interactive mode
 bash scripts/init-project.sh --interactive
 
-# 플래그 모드
+# Flag mode
 bash scripts/init-project.sh \
   --type cli-tool \
   --language go \
@@ -31,97 +31,97 @@ bash scripts/init-project.sh \
 ```
 
 #### `switch-project.sh`
-프로젝트 전환
+Switch projects.
 
 ```bash
-# 프로젝트 목록
+# List projects
 bash scripts/switch-project.sh --list
 
-# 프로젝트 전환
+# Switch project
 bash scripts/switch-project.sh my-cli-tool
 ```
 
 ---
 
-### 에이전트 실행
+### Run Agents
 
 #### `run-agent.sh`
-에이전트 실행 래퍼 (현재 활성 프로젝트 자동 인식)
+Agent runner wrapper (automatically detects current active project).
 
 ```bash
 # Stack Initializer
 bash scripts/run-agent.sh stack-initializer
 
 # Project Planner
-bash scripts/run-agent.sh project-planner --project "프로젝트 설명"
+bash scripts/run-agent.sh project-planner --project "Project description"
 
-# PM (Git 브랜치 자동 생성)
+# PM (automatic Git branch creation)
 bash scripts/run-agent.sh pm --ticket-file projects/{name}/planning/tickets/PLAN-001-*.md
 
-# Coding (Git 브랜치 자동 생성)
+# Coding (automatic Git branch creation)
 bash scripts/run-agent.sh coding --ticket PLAN-001
 
-# QA (Git 브랜치 자동 생성)
+# QA (automatic Git branch creation)
 bash scripts/run-agent.sh qa --ticket PLAN-001
 ```
 
-**주요 기능:**
-- `.project-config.json`의 `current_project` 자동 인식
-- PM, Coding, QA 실행 시 티켓 번호 기반 Git 브랜치 자동 생성/전환
-- 브랜치 생성 실패 시에도 작업 계속 진행
+**Key features:**
+- Automatically detects `current_project` from `.project-config.json`
+- Automatically creates/switches Git branches based on ticket number when running PM, Coding, QA
+- Continues work even if branch creation fails
 
 ---
 
-### 로그 및 모니터링
+### Logs & Monitoring
 
 #### `show-logs.sh`
-에이전트 로그 조회 (v2.0)
+View agent logs (v2.0).
 
 ```bash
-# 현재 프로젝트 전체 로그
+# All logs for the current project
 bash scripts/show-logs.sh
 
-# 특정 에이전트만
+# Only a specific agent
 bash scripts/show-logs.sh coding
 
-# 모든 프로젝트 로그
+# Logs for all projects
 bash scripts/show-logs.sh --all
 ```
 
 #### `rate-limit-check.sh`
-Claude API Rate Limit 확인
+Check Claude API rate limits.
 
 ```bash
 bash scripts/rate-limit-check.sh [agent_name]
 ```
 
 #### `parse_usage.py`
-API 사용량 파싱 (내부 사용)
+Parse API usage (internal use).
 
 ---
 
-### Git 관리
+### Git Management
 
 #### `git-branch-helper.sh`
-Git 브랜치 자동 관리
+Automatic Git branch management.
 
 ```bash
-# 브랜치 준비
+# Prepare branch
 bash scripts/git-branch-helper.sh prepare coding PLAN-001 user-auth
 
-# 현재 상태 확인
+# Check current status
 bash scripts/git-branch-helper.sh status
 
-# 설정 확인
+# Show configuration
 bash scripts/git-branch-helper.sh config
 ```
 
 ---
 
-### 시스템 개발
+### System Development
 
 #### `create-dev-log.sh`
-시스템 개발 로그 생성 (에이전트 시스템 자체 개선용)
+Create system development logs (for improving the agent system itself).
 
 ```bash
 bash scripts/create-dev-log.sh git-workflow-automation
@@ -130,17 +130,17 @@ bash scripts/create-dev-log.sh git-workflow-automation
 ---
 
 
-## 📊 v1.0 vs v2.0 차이점
+## 📊 Differences Between v1.0 and v2.0
 
-| 스크립트 | v1.0 | v2.0 | 변경사항 |
-|---------|------|------|---------|
-| `init-project.sh` | `applications/`, `planning-materials/` 생성 | `projects/{name}/` 생성 | 프로젝트 격리, 타입별 동적 구조 |
+| Script            | v1.0                                      | v2.0                         | Change                          |
+|-------------------|-------------------------------------------|------------------------------|---------------------------------|
+| `init-project.sh` | Creates `applications/`, `planning-materials/` | Creates `projects/{name}/` | Project isolation, type-based dynamic structure |
 
 ---
 
-## 🚀 시작하기
+## 🚀 Getting Started
 
-새 프로젝트 시작:
+Start a new project:
 
 ```bash
 cd team
@@ -149,9 +149,9 @@ bash scripts/init-project.sh --interactive
 
 ---
 
-## 🛠️ 스크립트 개발 가이드
+## 🛠️ Script Development Guide
 
-### 공통 패턴
+### Common Pattern
 
 ```bash
 #!/bin/bash
@@ -161,50 +161,50 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(dirname "$SCRIPT_DIR")"
 CONFIG_FILE="$WORKSPACE_ROOT/.project-config.json"
 
-# 현재 프로젝트 읽기
+# Read current project
 CURRENT_PROJECT=$(grep -o '"current_project": *"[^"]*"' "$CONFIG_FILE" | cut -d'"' -f4)
 PROJECT_PATH="$WORKSPACE_ROOT/projects/$CURRENT_PROJECT"
 ```
 
-### 프로젝트 경로 규칙
+### Project Path Rules
 
-모든 프로젝트는 `projects/{current_project}/` 디렉토리에 격리됩니다.
-
----
+All projects are isolated under the `projects/{current_project}/` directory.
 
 ---
 
-## 🔑 핵심 개념
+---
 
-### 프로젝트 Git 리포지토리
+## 🔑 Core Concepts
 
-각 프로젝트는 **독립적인 Git 리포지토리**로 관리됩니다:
+### Project Git Repositories
+
+Each project is managed as an **independent Git repository**:
 
 ```
 team/projects/
 ├── my-todo-app/
-│   ├── .git/                    # ← 프로젝트 A의 Git 리포지토리
+│   ├── .git/                    # ← Git repository for project A
 │   └── src/
 └── my-blog/
-    ├── .git/                    # ← 프로젝트 B의 Git 리포지토리
+    ├── .git/                    # ← Git repository for project B
     └── src/
 ```
 
-### Git 브랜치 작업
+### Git Branch Work
 
-`git-branch-helper.sh`와 `run-agent.sh`는 **프로젝트 리포지토리** 내에서 Git 작업을 수행합니다.
+`git-branch-helper.sh` and `run-agent.sh` perform Git operations **inside the project repository**.
 
 ```bash
 cd team
 bash scripts/run-agent.sh coding --ticket PLAN-001
 
-# 내부 동작:
-# 1. projects/{current_project}/.git에서 feature/PLAN-001-xxx 브랜치 생성
-# 2. 해당 브랜치로 전환
-# 3. 코드 작성
+# Internally:
+# 1. Create feature/PLAN-001-xxx branch in projects/{current_project}/.git
+# 2. Switch to that branch
+# 3. Write code
 ```
 
 ---
 
-**업데이트 일시**: 2026-03-12
-**버전**: v0.0.2
+**Last updated**: 2026-03-12
+**Version**: v0.0.2

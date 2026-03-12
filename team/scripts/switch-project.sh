@@ -1,7 +1,7 @@
 #!/bin/bash
-# 프로젝트 전환 스크립트
+# Project switch script
 #
-# 사용법:
+# Usage:
 #   bash scripts/switch-project.sh my-cli-tool
 #   bash scripts/switch-project.sh --list
 
@@ -12,23 +12,23 @@ WORKSPACE_ROOT="$(dirname "$SCRIPT_DIR")"
 CONFIG_FILE="$WORKSPACE_ROOT/.project-config.json"
 PROJECTS_DIR="$WORKSPACE_ROOT/projects"
 
-# ── 프로젝트 목록 표시 ─────────────────────────────────────────
+# ── Show project list ─────────────────────────────────────────
 show_projects() {
     echo ""
     echo "╔══════════════════════════════════════════════╗"
-    echo "║  프로젝트 목록                               ║"
+    echo "║  Project List                                ║"
     echo "╚══════════════════════════════════════════════╝"
     echo ""
 
     if [[ ! -d "$PROJECTS_DIR" ]] || [[ -z "$(ls -A "$PROJECTS_DIR" 2>/dev/null)" ]]; then
-        echo "프로젝트가 없습니다."
+        echo "No projects found."
         echo ""
-        echo "새 프로젝트 생성:"
+        echo "Create a new project:"
         echo "  bash scripts/init-project.sh --interactive"
         exit 0
     fi
 
-    # 현재 활성 프로젝트 확인
+    # Check current active project
     CURRENT_PROJECT=""
     if [[ -f "$CONFIG_FILE" ]]; then
         CURRENT_PROJECT=$(grep -o '"current_project": *"[^"]*"' "$CONFIG_FILE" | cut -d'"' -f4 2>/dev/null || echo "")
@@ -39,24 +39,24 @@ show_projects() {
             project_name=$(basename "$project_dir")
             meta_file="$project_dir/.project-meta.json"
 
-            # 현재 프로젝트 표시
+            # Mark current project
             if [[ "$project_name" == "$CURRENT_PROJECT" ]]; then
-                echo "  → $project_name (현재 활성)"
+                echo "  → $project_name (current)"
             else
                 echo "    $project_name"
             fi
 
-            # 메타데이터 표시
+            # Show metadata
             if [[ -f "$meta_file" ]]; then
                 project_type=$(grep -o '"project_type": *"[^"]*"' "$meta_file" | cut -d'"' -f4 2>/dev/null || echo "unknown")
-                echo "      타입: $project_type"
+                echo "      Type: $project_type"
             fi
             echo ""
         fi
     done
 }
 
-# ── 인자 확인 ────────────────────────────────────────────────────
+# ── Argument check ────────────────────────────────────────────
 if [[ $# -eq 0 ]] || [[ "$1" == "--list" ]] || [[ "$1" == "-l" ]]; then
     show_projects
     exit 0
@@ -65,42 +65,42 @@ fi
 PROJECT_NAME="$1"
 PROJECT_PATH="$PROJECTS_DIR/$PROJECT_NAME"
 
-# ── 프로젝트 존재 확인 ────────────────────────────────────────────
+# ── Check project existence ──────────────────────────────────
 if [[ ! -d "$PROJECT_PATH" ]]; then
-    echo "❌ 프로젝트를 찾을 수 없습니다: $PROJECT_NAME"
+    echo "❌ Project not found: $PROJECT_NAME"
     echo ""
-    echo "사용 가능한 프로젝트:"
+    echo "Available projects:"
     show_projects
     exit 1
 fi
 
-# ── 프로젝트 메타데이터 읽기 ──────────────────────────────────────
+# ── Read project metadata ─────────────────────────────────────
 META_FILE="$PROJECT_PATH/.project-meta.json"
 if [[ ! -f "$META_FILE" ]]; then
-    echo "❌ 프로젝트 메타데이터를 찾을 수 없습니다: $META_FILE"
+    echo "❌ Project metadata not found: $META_FILE"
     exit 1
 fi
 
 PROJECT_TYPE=$(grep -o '"project_type": *"[^"]*"' "$META_FILE" | cut -d'"' -f4 2>/dev/null || echo "unknown")
 CREATED_AT=$(grep -o '"created_at": *"[^"]*"' "$META_FILE" | cut -d'"' -f4 2>/dev/null || echo "unknown")
 
-# ── .project-config.json 업데이트 ─────────────────────────────────
+# ── Update .project-config.json ───────────────────────────────
 echo ""
-echo "프로젝트 전환: $PROJECT_NAME"
-echo "  타입: $PROJECT_TYPE"
-echo "  생성일: $CREATED_AT"
+echo "Switching project: $PROJECT_NAME"
+echo "  Type: $PROJECT_TYPE"
+echo "  Created at: $CREATED_AT"
 echo ""
 
-# 기존 recent_projects 배열 읽기 (JSON 파싱은 jq 없이 간단히 처리)
+# Read existing recent_projects array (simple JSON parsing without jq)
 RECENT_PROJECTS=()
 if [[ -f "$CONFIG_FILE" ]]; then
-    # 기존 프로젝트 목록 추출 (간단한 grep)
+    # Extract existing project names (simple grep)
     while IFS= read -r line; do
         RECENT_PROJECTS+=("$line")
     done < <(grep -o '"[^"]*"' "$CONFIG_FILE" | grep -v "current_project\|current_project_path\|recent_projects" | tr -d '"' | head -5)
 fi
 
-# 현재 프로젝트를 맨 앞에 추가 (중복 제거)
+# Add current project to the front (remove duplicates)
 NEW_RECENT=("$PROJECT_NAME")
 for proj in "${RECENT_PROJECTS[@]}"; do
     if [[ "$proj" != "$PROJECT_NAME" ]] && [[ ${#NEW_RECENT[@]} -lt 5 ]]; then
@@ -108,7 +108,7 @@ for proj in "${RECENT_PROJECTS[@]}"; do
     fi
 done
 
-# JSON 생성 (recent_projects 배열)
+# Build JSON for recent_projects array
 RECENT_JSON=""
 for i in "${!NEW_RECENT[@]}"; do
     if [[ $i -eq 0 ]]; then
@@ -126,11 +126,11 @@ cat > "$CONFIG_FILE" <<EOF
 }
 EOF
 
-echo "✅ 프로젝트 전환 완료"
+echo "✅ Project switch complete"
 echo ""
-echo "다음 단계:"
-echo "  1. 티켓 생성: bash scripts/run-agent.sh project-planner --project \"프로젝트 설명\""
-echo "  2. 명세서 생성: bash scripts/run-agent.sh pm --ticket-file projects/$PROJECT_NAME/planning/tickets/PLAN-001-*.md"
-echo "  3. 코딩: bash scripts/run-agent.sh coding --ticket PLAN-001"
-echo "  4. 테스트: bash scripts/run-agent.sh qa --ticket PLAN-001"
+echo "Next steps:"
+echo "  1. Create ticket: bash scripts/run-agent.sh project-planner --project \"Project description\""
+echo "  2. Create spec: bash scripts/run-agent.sh pm --ticket-file projects/$PROJECT_NAME/planning/tickets/PLAN-001-*.md"
+echo "  3. Coding: bash scripts/run-agent.sh coding --ticket PLAN-001"
+echo "  4. Testing: bash scripts/run-agent.sh qa --ticket PLAN-001"
 echo ""
