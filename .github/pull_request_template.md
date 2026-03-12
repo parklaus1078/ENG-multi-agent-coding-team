@@ -1,48 +1,48 @@
-## 요약
+## Summary
 
-<!-- 이 PR은 무엇을 하나요? 한두 문장으로 설명해 주세요. -->
+<!-- What does this PR do? Describe in one or two sentences. -->
 
 ---
 
-## 관련 이슈
+## Related Issues
 
 Closes #
 
 ---
 
-## 변경 유형
+## Change Type
 
-- [ ] 버그 수정
-- [ ] 새 기능
-- [ ] 문서 업데이트
-- [ ] 리팩터링 (동작 변경 없음)
-- [ ] 기타: 
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Documentation update
+- [ ] Refactoring (no behavior change)
+- [ ] Other: 
 
 ---
 
-## 변경 사항
+## Changes
 
-<!-- 주요 변경 내용을 나열해 주세요. 어떤 파일을 왜 수정했는지 구체적으로 적어 주세요. -->
+<!-- List the main changes. Describe specifically which files were modified and why. -->
 
 - 
 - 
 
 ---
 
-## 테스트
+## Testing
 
-<!-- 어떻게 검증했나요? -->
+<!-- How did you verify this? -->
 
-- [ ] 해당 에이전트를 로컬에서 실행하고 동작 확인함
-- [ ] 엣지 케이스 테스트함 (예: 티켓 파일 누락, Rate Limit 경고)
-- [ ] 해당 없음 (문서만 수정)
+- [ ] Ran the agent locally and verified it works
+- [ ] Tested edge cases (e.g., missing ticket file, rate limit warning)
+- [ ] Not applicable (documentation only)
 
 ---
 
-## 체크리스트
+## Checklist
 
-- [ ] PR 대상 브랜치가 `main`임
-- [ ] 하나의 PR = 하나의 기능 또는 수정 (관련 없는 변경 없음)
-- [ ] `CLAUDE.md` 변경은 워크플로우만 수정 (코딩 규칙 포함 안 함)
-- [ ] 사용법이나 프로젝트 구조에 영향을 주는 변경 시 README 업데이트함
-- [ ] 커밋 메시지가 `type: summary` 형식을 따름
+- [ ] PR targets `main` branch
+- [ ] One PR = one feature or fix (no unrelated changes)
+- [ ] `CLAUDE.md` changes only modify workflow (no coding rules included)
+- [ ] README updated if changes affect usage or project structure
+- [ ] Commit messages follow `type: summary` format

@@ -1,6 +1,6 @@
 #!/bin/bash
-# Git 브랜치 관리 헬퍼 스크립트
-# 코딩 에이전트가 작업 전후로 호출하는 유틸리티
+# Git branch management helper script
+# Utility called by coding agents before and after work
 
 set -e
 
@@ -8,10 +8,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(dirname "$SCRIPT_DIR")"
 CONFIG_FILE="$WORKSPACE_ROOT/.config/git-workflow.json"
 
-# ── 설정 파일 읽기 ──────────────────────────────────────────
+# ── Read configuration file ─────────────────────────────────
 if [[ ! -f "$CONFIG_FILE" ]]; then
-    echo "⚠️  설정 파일이 없습니다: $CONFIG_FILE"
-    echo "   기본 설정으로 진행합니다."
+    echo "⚠️  Configuration file not found: $CONFIG_FILE"
+    echo "   Proceeding with default settings."
     BASE_BRANCH="dev"
     ENABLED=true
 else
@@ -23,60 +23,60 @@ else
     STASH_BEFORE=$(jq -r '.safety.stash_before_checkout // true' "$CONFIG_FILE")
 fi
 
-# ── 서브커맨드 처리 ──────────────────────────────────────────
+# ── Handle subcommands ──────────────────────────────────────
 
 case "${1:-}" in
-    # ── prepare: 작업 전 브랜치 준비 ──────────────────────────
+    # ── prepare: Prepare branch before work ────────────────
     prepare)
         AGENT_NAME="${2:-}"
         TICKET_NUM="${3:-}"
         SLUG="${4:-}"
 
         if [[ "$ENABLED" != "true" ]]; then
-            echo "ℹ️  Git 브랜치 자동 관리가 비활성화되어 있습니다."
+            echo "ℹ️  Git branch auto-management is disabled."
             exit 0
         fi
 
         if [[ -z "$AGENT_NAME" || -z "$TICKET_NUM" ]]; then
-            echo "❌ 사용법: bash scripts/git-branch-helper.sh prepare <agent-name> <ticket-number> [slug]"
+            echo "❌ Usage: bash scripts/git-branch-helper.sh prepare <agent-name> <ticket-number> [slug]"
             exit 1
         fi
 
-        # 에이전트별 prefix 결정 및 베이스 브랜치 설정
+        # Determine prefix by agent and set base branch
         case "$AGENT_NAME" in
-            # v0.0.2 통합 에이전트
+            # v0.0.2 unified agents
             coding)
                 PREFIX="feature"
-                # coding은 base_branch (main/dev)에서 분기
+                # coding branches from base_branch (main/dev)
                 ;;
             qa)
                 PREFIX="test"
-                # qa는 동일 티켓의 feature 브랜치에서 분기
+                # qa branches from same ticket's feature branch
                 FEATURE_BRANCH="feature/$TICKET_NUM"
                 if [[ -n "$SLUG" ]]; then
                     FEATURE_BRANCH="feature/$TICKET_NUM-$SLUG"
                 fi
-                # feature 브랜치가 존재하는지 확인
+                # Check if feature branch exists
                 if git show-ref --verify --quiet "refs/heads/$FEATURE_BRANCH"; then
                     BASE_BRANCH="$FEATURE_BRANCH"
-                    echo "📌 QA는 feature 브랜치를 베이스로 생성됩니다: $FEATURE_BRANCH"
+                    echo "📌 QA branch will be created from feature branch: $FEATURE_BRANCH"
                 else
-                    echo "⚠️  feature 브랜치가 없습니다: $FEATURE_BRANCH"
-                    echo "   먼저 coding 에이전트를 실행하세요."
-                    echo "   또는 기본 베이스 브랜치를 사용합니다: $BASE_BRANCH"
+                    echo "⚠️  Feature branch not found: $FEATURE_BRANCH"
+                    echo "   Run coding agent first."
+                    echo "   Or using default base branch: $BASE_BRANCH"
                 fi
                 ;;
             pm)
                 PREFIX="docs"
-                # pm은 base_branch에서 분기
+                # pm branches from base_branch
                 ;;
             *)
-                echo "⚠️  알 수 없는 에이전트: $AGENT_NAME"
+                echo "⚠️  Unknown agent: $AGENT_NAME"
                 PREFIX="feature"
                 ;;
         esac
 
-        # 브랜치명 생성
+        # Generate branch name
         if [[ -n "$SLUG" ]]; then
             BRANCH_NAME="$PREFIX/$TICKET_NUM-$SLUG"
         else
@@ -85,123 +85,123 @@ case "${1:-}" in
 
         echo ""
         echo "╔══════════════════════════════════════════════╗"
-        echo "║  Git 브랜치 준비"
-        echo "║  베이스: $BASE_BRANCH"
-        echo "║  타겟: $BRANCH_NAME"
+        echo "║  Git Branch Preparation"
+        echo "║  Base: $BASE_BRANCH"
+        echo "║  Target: $BRANCH_NAME"
         echo "╚══════════════════════════════════════════════╝"
         echo ""
 
-        # 현재 브랜치 확인
+        # Check current branch
         CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 
         if [[ "$CURRENT_BRANCH" == "$BRANCH_NAME" ]]; then
-            echo "✅ 이미 타겟 브랜치에 있습니다: $BRANCH_NAME"
+            echo "✅ Already on target branch: $BRANCH_NAME"
             exit 0
         fi
 
-        # Uncommitted changes 확인
+        # Check uncommitted changes
         if [[ "$CHECK_UNCOMMITTED" == "true" ]]; then
             if ! git diff-index --quiet HEAD -- 2>/dev/null; then
                 if [[ "$STASH_BEFORE" == "true" ]]; then
-                    echo "⚠️  커밋되지 않은 변경사항이 있습니다. Stash에 저장합니다."
+                    echo "⚠️  Uncommitted changes detected. Saving to stash."
                     git stash push -m "Auto-stash before switching to $BRANCH_NAME"
-                    echo "💾 Stash 저장 완료. 나중에 'git stash pop'으로 복원할 수 있습니다."
+                    echo "💾 Stash saved. Restore later with 'git stash pop'."
                 else
-                    echo "❌ 커밋되지 않은 변경사항이 있습니다."
-                    echo "   먼저 커밋하거나 stash하세요."
-                    echo "   또는 .config/git-workflow.json에서 stash_before_checkout을 true로 설정하세요."
+                    echo "❌ Uncommitted changes detected."
+                    echo "   Commit or stash first."
+                    echo "   Or set stash_before_checkout to true in .config/git-workflow.json."
                     exit 1
                 fi
             fi
         fi
 
-        # 베이스 브랜치 최신화
-        echo "📥 베이스 브랜치 최신화: $BASE_BRANCH"
+        # Update base branch
+        echo "📥 Updating base branch: $BASE_BRANCH"
         git fetch origin "$BASE_BRANCH" 2>/dev/null || true
 
-        # 브랜치 존재 여부 확인
+        # Check if branch exists
         if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
-            # 브랜치 존재 → checkout
-            echo "🔀 기존 브랜치로 전환: $BRANCH_NAME"
+            # Branch exists → checkout
+            echo "🔀 Switching to existing branch: $BRANCH_NAME"
             git checkout "$BRANCH_NAME"
         else
-            # 브랜치 없음
+            # Branch doesn't exist
             if [[ "$AUTO_CREATE" == "true" ]]; then
-                echo "🌿 새 브랜치 생성: $BRANCH_NAME (from $BASE_BRANCH)"
+                echo "🌿 Creating new branch: $BRANCH_NAME (from $BASE_BRANCH)"
                 git checkout -b "$BRANCH_NAME" "origin/$BASE_BRANCH" 2>/dev/null || \
                 git checkout -b "$BRANCH_NAME" "$BASE_BRANCH"
-                echo "✅ 브랜치 생성 완료"
+                echo "✅ Branch created"
             else
-                echo "❌ 브랜치가 존재하지 않으며, auto_create가 비활성화되어 있습니다."
-                echo "   .config/git-workflow.json에서 auto_create를 true로 설정하거나"
-                echo "   수동으로 브랜치를 생성하세요: git checkout -b $BRANCH_NAME $BASE_BRANCH"
+                echo "❌ Branch doesn't exist and auto_create is disabled."
+                echo "   Enable auto_create in .config/git-workflow.json or"
+                echo "   Create branch manually: git checkout -b $BRANCH_NAME $BASE_BRANCH"
                 exit 1
             fi
         fi
 
         echo ""
-        echo "✅ 브랜치 준비 완료: $BRANCH_NAME"
+        echo "✅ Branch ready: $BRANCH_NAME"
         echo ""
         ;;
 
-    # ── status: 현재 Git 상태 확인 ──────────────────────────
+    # ── status: Check current Git status ───────────────────
     status)
         CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
         echo ""
-        echo "📍 현재 브랜치: $CURRENT_BRANCH"
-        echo "📌 베이스 브랜치 (설정): $BASE_BRANCH"
+        echo "📍 Current branch: $CURRENT_BRANCH"
+        echo "📌 Base branch (configured): $BASE_BRANCH"
         echo ""
 
         if ! git diff-index --quiet HEAD -- 2>/dev/null; then
-            echo "📝 커밋되지 않은 변경사항:"
+            echo "📝 Uncommitted changes:"
             git status --short
         else
-            echo "✅ 작업 디렉토리 깨끗함 (커밋되지 않은 변경사항 없음)"
+            echo "✅ Working directory clean (no uncommitted changes)"
         fi
         echo ""
         ;;
 
-    # ── cleanup: 작업 완료 후 정리 ──────────────────────────
+    # ── cleanup: Clean up after work completion ────────────
     cleanup)
-        echo "🧹 브랜치 정리 작업은 수동으로 수행하세요."
-        echo "   - 불필요한 브랜치 삭제: git branch -d <branch-name>"
-        echo "   - 원격 브랜치 삭제: git push origin --delete <branch-name>"
+        echo "🧹 Branch cleanup must be done manually."
+        echo "   - Delete unnecessary branches: git branch -d <branch-name>"
+        echo "   - Delete remote branches: git push origin --delete <branch-name>"
         ;;
 
-    # ── config: 설정 확인 ────────────────────────────────────
+    # ── config: View configuration ──────────────────────────
     config)
         if [[ -f "$CONFIG_FILE" ]]; then
             echo ""
-            echo "📋 현재 Git Workflow 설정:"
+            echo "📋 Current Git Workflow Configuration:"
             echo ""
             cat "$CONFIG_FILE" | jq '.'
             echo ""
         else
-            echo "⚠️  설정 파일이 없습니다: $CONFIG_FILE"
+            echo "⚠️  Configuration file not found: $CONFIG_FILE"
         fi
         ;;
 
     # ── help ────────────────────────────────────────────────
     *)
         echo ""
-        echo "Git 브랜치 관리 헬퍼 스크립트"
+        echo "Git Branch Management Helper Script"
         echo ""
-        echo "사용법:"
+        echo "Usage:"
         echo "  bash scripts/git-branch-helper.sh prepare <agent-name> <ticket-number> [slug]"
-        echo "    → 작업 전 브랜치 준비 (생성 또는 전환)"
+        echo "    → Prepare branch before work (create or switch)"
         echo ""
         echo "  bash scripts/git-branch-helper.sh status"
-        echo "    → 현재 Git 상태 확인"
+        echo "    → Check current Git status"
         echo ""
         echo "  bash scripts/git-branch-helper.sh config"
-        echo "    → 현재 설정 확인"
+        echo "    → View current configuration"
         echo ""
-        echo "예시:"
+        echo "Examples:"
         echo "  bash scripts/git-branch-helper.sh prepare coding PLAN-001 user-auth"
-        echo "  → feature/PLAN-001-user-auth 브랜치 생성/전환"
+        echo "  → Create/switch to feature/PLAN-001-user-auth branch"
         echo ""
         echo "  bash scripts/git-branch-helper.sh prepare qa PLAN-001"
-        echo "  → test/PLAN-001 브랜치 생성/전환"
+        echo "  → Create/switch to test/PLAN-001 branch"
         echo ""
         exit 1
         ;;

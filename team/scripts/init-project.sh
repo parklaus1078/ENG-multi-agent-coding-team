@@ -1,7 +1,7 @@
 #!/bin/bash
-# 프로젝트 초기화 스크립트
+# Project initialization script
 #
-# 사용법:
+# Usage:
 #   bash scripts/init-project.sh --interactive
 #   bash scripts/init-project.sh --type cli-tool --language go --framework cobra --name my-cli
 
@@ -12,7 +12,7 @@ WORKSPACE_ROOT="$(dirname "$SCRIPT_DIR")"
 PROJECTS_DIR="$WORKSPACE_ROOT/projects"
 CONFIG_FILE="$WORKSPACE_ROOT/.project-config.json"
 
-# ── 기본값 ──────────────────────────────────────────────────────
+# ── Defaults ────────────────────────────────────────────────
 PROJECT_TYPE=""
 LANGUAGE=""
 FRAMEWORK=""
@@ -21,7 +21,7 @@ PROJECT_NAME=""
 PROJECT_DESC=""
 INTERACTIVE=false
 
-# ── 플래그 파싱 ──────────────────────────────────────────────────
+# ── Parse flags ─────────────────────────────────────────────
 if [[ $# -eq 0 ]]; then
     INTERACTIVE=true
 fi
@@ -57,43 +57,43 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
         *)
-            echo "❌ 알 수 없는 옵션: '$1'"
+            echo "❌ Unknown option: '$1'"
             echo ""
-            echo "사용법:"
+            echo "Usage:"
             echo "  bash scripts/init-project.sh --interactive"
             echo "  bash scripts/init-project.sh --type cli-tool --language go --framework cobra --name my-cli"
             echo ""
-            echo "옵션:"
-            echo "  --interactive       대화형 모드"
-            echo "  --type             프로젝트 타입 (web-fullstack, web-mvc, cli-tool, desktop-app, mobile-app, library, data-pipeline)"
-            echo "  --language         언어 (python, javascript, typescript, go, rust, java, etc.)"
-            echo "  --framework        프레임워크 (fastapi, django, nextjs, cobra, etc.)"
-            echo "  --version          프레임워크 버전 (기본: latest)"
-            echo "  --name             프로젝트 이름"
-            echo "  --description      프로젝트 설명"
+            echo "Options:"
+            echo "  --interactive       Interactive mode"
+            echo "  --type             Project type (web-fullstack, web-mvc, cli-tool, desktop-app, mobile-app, library, data-pipeline)"
+            echo "  --language         Language (python, javascript, typescript, go, rust, java, etc.)"
+            echo "  --framework        Framework (fastapi, django, nextjs, cobra, etc.)"
+            echo "  --version          Framework version (default: latest)"
+            echo "  --name             Project name"
+            echo "  --description      Project description"
             exit 1
             ;;
     esac
 done
 
-# ── 인터랙티브 모드 ─────────────────────────────────────────────
+# ── Interactive mode ────────────────────────────────────────
 if [[ "$INTERACTIVE" == true ]]; then
     echo "╔══════════════════════════════════════════════╗"
-    echo "║  멀티 에이전트 프로젝트 초기화              ║"
+    echo "║  Multi-Agent Project Initialization          ║"
     echo "╚══════════════════════════════════════════════╝"
     echo ""
 
-    # 프로젝트 타입 선택
-    echo "1. 프로젝트 타입을 선택하세요:"
-    echo "   1) web-fullstack     (FE + BE 분리)"
-    echo "   2) web-mvc           (Django, Rails, Spring Boot MVC 등)"
-    echo "   3) cli-tool          (CLI 도구)"
-    echo "   4) desktop-app       (Electron, Tauri, Qt 등)"
-    echo "   5) mobile-app        (React Native, Flutter 등)"
-    echo "   6) library           (npm, pip 패키지 등)"
-    echo "   7) data-pipeline     (Airflow, Prefect 등)"
+    # Select project type
+    echo "1. Select project type:"
+    echo "   1) web-fullstack     (FE + BE separated)"
+    echo "   2) web-mvc           (Django, Rails, Spring Boot MVC, etc.)"
+    echo "   3) cli-tool          (CLI tools)"
+    echo "   4) desktop-app       (Electron, Tauri, Qt, etc.)"
+    echo "   5) mobile-app        (React Native, Flutter, etc.)"
+    echo "   6) library           (npm, pip packages, etc.)"
+    echo "   7) data-pipeline     (Airflow, Prefect, etc.)"
     echo ""
-    read -p "선택 (1-7): " TYPE_CHOICE
+    read -p "Select (1-7): " TYPE_CHOICE
 
     case $TYPE_CHOICE in
         1) PROJECT_TYPE="web-fullstack" ;;
@@ -103,71 +103,71 @@ if [[ "$INTERACTIVE" == true ]]; then
         5) PROJECT_TYPE="mobile-app" ;;
         6) PROJECT_TYPE="library" ;;
         7) PROJECT_TYPE="data-pipeline" ;;
-        *) echo "❌ 잘못된 선택"; exit 1 ;;
+        *) echo "❌ Invalid selection"; exit 1 ;;
     esac
 
     echo ""
-    read -p "2. 프로젝트 이름: " PROJECT_NAME
-    read -p "3. 언어를 입력하세요 (예: python, go, javascript): " LANGUAGE
-    read -p "4. 프레임워크를 입력하세요 (예: fastapi, cobra, nextjs): " FRAMEWORK
-    read -p "5. 프레임워크 버전 (기본: latest): " INPUT_VERSION
+    read -p "2. Project name: " PROJECT_NAME
+    read -p "3. Enter language (e.g., python, go, javascript): " LANGUAGE
+    read -p "4. Enter framework (e.g., fastapi, cobra, nextjs): " FRAMEWORK
+    read -p "5. Framework version (default: latest): " INPUT_VERSION
     if [[ -n "$INPUT_VERSION" ]]; then
         VERSION="$INPUT_VERSION"
     fi
-    read -p "6. 프로젝트 설명 (선택): " PROJECT_DESC
+    read -p "6. Project description (optional): " PROJECT_DESC
 fi
 
-# ── 필수 값 검증 ────────────────────────────────────────────────
+# ── Validate required values ────────────────────────────────
 if [[ -z "$PROJECT_TYPE" ]] || [[ -z "$LANGUAGE" ]] || [[ -z "$FRAMEWORK" ]] || [[ -z "$PROJECT_NAME" ]]; then
-    echo "❌ 필수 값이 누락되었습니다."
-    echo "   --type, --language, --framework, --name 은 필수입니다."
+    echo "❌ Required values missing."
+    echo "   --type, --language, --framework, --name are required."
     exit 1
 fi
 
-# 프로젝트 이름 유효성 검사 (영문, 숫자, 하이픈만 허용)
+# Validate project name (allow only alphanumeric and hyphens)
 if [[ ! "$PROJECT_NAME" =~ ^[a-zA-Z0-9-]+$ ]]; then
-    echo "❌ 프로젝트 이름은 영문, 숫자, 하이픈(-)만 사용 가능합니다."
+    echo "❌ Project name can only contain alphanumeric characters and hyphens (-)."
     exit 1
 fi
 
 PROJECT_PATH="$PROJECTS_DIR/$PROJECT_NAME"
 
-# ── 기존 프로젝트 확인 ──────────────────────────────────────────
+# ── Check for existing project ──────────────────────────────
 if [[ -d "$PROJECT_PATH" ]]; then
     echo ""
-    echo "⚠️  이미 존재하는 프로젝트입니다: $PROJECT_NAME"
-    read -p "덮어쓰시겠습니까? (yes/no): " OVERWRITE
+    echo "⚠️  Project already exists: $PROJECT_NAME"
+    read -p "Overwrite? (yes/no): " OVERWRITE
 
     if [[ "$OVERWRITE" != "yes" ]]; then
-        echo "❌ 초기화 취소"
+        echo "❌ Initialization cancelled"
         exit 0
     fi
 
     rm -rf "$PROJECT_PATH"
 fi
 
-# ── 프로젝트 디렉토리 생성 ─────────────────────────────────────
+# ── Create project directory ────────────────────────────────
 echo ""
-echo "📝 프로젝트 디렉토리 생성 중: $PROJECT_PATH"
+echo "📝 Creating project directory: $PROJECT_PATH"
 mkdir -p "$PROJECT_PATH"
 
-# ── 프로젝트 메타데이터 생성 ──────────────────────────────────
+# ── Generate project metadata ───────────────────────────────
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-echo "📝 프로젝트 메타데이터 생성: .project-meta.json"
+echo "📝 Creating project metadata: .project-meta.json"
 
-# web-fullstack의 경우 frontend/backend 추가 입력 받기
+# For web-fullstack, get additional frontend/backend input
 if [[ "$PROJECT_TYPE" == "web-fullstack" ]]; then
     if [[ "$INTERACTIVE" == true ]]; then
         echo ""
-        echo "Frontend 설정:"
-        read -p "  언어 (javascript/typescript): " FE_LANGUAGE
-        read -p "  프레임워크 (nextjs, vite-react, nuxt 등): " FE_FRAMEWORK
+        echo "Frontend configuration:"
+        read -p "  Language (javascript/typescript): " FE_LANGUAGE
+        read -p "  Framework (nextjs, vite-react, nuxt, etc.): " FE_FRAMEWORK
         echo ""
-        echo "Backend 설정:"
-        echo "  언어: $LANGUAGE"
-        echo "  프레임워크: $FRAMEWORK"
-        read -p "  데이터베이스 (postgresql, mysql, mongodb 등): " DATABASE
+        echo "Backend configuration:"
+        echo "  Language: $LANGUAGE"
+        echo "  Framework: $FRAMEWORK"
+        read -p "  Database (postgresql, mysql, mongodb, etc.): " DATABASE
     fi
 
     cat > "$PROJECT_PATH/.project-meta.json" <<EOF
@@ -195,7 +195,7 @@ if [[ "$PROJECT_TYPE" == "web-fullstack" ]]; then
 }
 EOF
 else
-    # 다른 프로젝트 타입
+    # Other project types
     cat > "$PROJECT_PATH/.project-meta.json" <<EOF
 {
   "project_name": "$PROJECT_NAME",
@@ -214,8 +214,8 @@ else
 EOF
 fi
 
-# ── planning/ 디렉토리 생성 (타입별 구조) ───────────────────────
-echo "📁 planning/ 디렉토리 생성 중..."
+# ── Create planning/ directory (type-specific structure) ────
+echo "📁 Creating planning/ directory..."
 
 mkdir -p "$PROJECT_PATH/planning/tickets"
 
@@ -262,23 +262,23 @@ case "$PROJECT_TYPE" in
         ;;
 esac
 
-# ── src/ 디렉토리 생성 (프레임워크별 초기 구조) ──────────────────
-echo "📁 src/ 디렉토리 생성 중..."
+# ── Create src/ directory (framework-specific initial structure) ──
+echo "📁 Creating src/ directory..."
 mkdir -p "$PROJECT_PATH/src"
 
-# 프레임워크별 초기 파일은 Stack Initializer Agent가 생성
-# 여기서는 기본 디렉토리만 생성
+# Framework-specific initial files created by Stack Initializer Agent
+# Only create base directory here
 
-# ── logs/ 디렉토리 생성 ────────────────────────────────────────
-echo "📁 logs/ 디렉토리 생성 중..."
+# ── Create logs/ directory ──────────────────────────────────
+echo "📁 Creating logs/ directory..."
 mkdir -p "$PROJECT_PATH/logs/stack-initializer"
 mkdir -p "$PROJECT_PATH/logs/project-planner"
 mkdir -p "$PROJECT_PATH/logs/pm"
 mkdir -p "$PROJECT_PATH/logs/coding"
 mkdir -p "$PROJECT_PATH/logs/qa"
 
-# ── README.md 생성 ──────────────────────────────────────────────
-echo "📝 README.md 생성 중..."
+# ── Generate README.md ──────────────────────────────────────
+echo "📝 Creating README.md..."
 cat > "$PROJECT_PATH/README.md" <<EOF
 # $PROJECT_NAME
 
@@ -286,53 +286,53 @@ $PROJECT_DESC
 
 ---
 
-## 프로젝트 정보
+## Project Information
 
-- **타입**: $PROJECT_TYPE
-- **언어**: $LANGUAGE
-- **프레임워크**: $FRAMEWORK
-- **생성일**: $TIMESTAMP
+- **Type**: $PROJECT_TYPE
+- **Language**: $LANGUAGE
+- **Framework**: $FRAMEWORK
+- **Created**: $TIMESTAMP
 
 ---
 
-## 디렉토리 구조
+## Directory Structure
 
 \`\`\`
 $PROJECT_NAME/
-├── .project-meta.json          # 프로젝트 메타데이터
-├── planning/                   # 기획 문서
-│   ├── tickets/                # 티켓 파일
-│   ├── specs/                  # 명세서
-│   └── test-cases/             # 테스트 케이스
-├── src/                        # 실제 코드
-├── logs/                       # 에이전트 로그
-└── README.md                   # 이 파일
+├── .project-meta.json          # Project metadata
+├── planning/                   # Planning documents
+│   ├── tickets/                # Ticket files
+│   ├── specs/                  # Specifications
+│   └── test-cases/             # Test cases
+├── src/                        # Actual code
+├── logs/                       # Agent logs
+└── README.md                   # This file
 \`\`\`
 
 ---
 
-## 워크플로우
+## Workflow
 
-### 1. 티켓 생성
+### 1. Create Tickets
 
 \`\`\`bash
 cd team
-bash scripts/run-agent.sh project-planner --project "프로젝트 설명"
+bash scripts/run-agent.sh project-planner --project "Project description"
 \`\`\`
 
-### 2. 명세서 생성
+### 2. Generate Specifications
 
 \`\`\`bash
 bash scripts/run-agent.sh pm --ticket-file projects/$PROJECT_NAME/planning/tickets/PLAN-001-*.md
 \`\`\`
 
-### 3. 코딩
+### 3. Coding
 
 \`\`\`bash
 bash scripts/run-agent.sh coding --ticket PLAN-001
 \`\`\`
 
-### 4. 테스트
+### 4. Testing
 
 \`\`\`bash
 bash scripts/run-agent.sh qa --ticket PLAN-001
@@ -340,7 +340,7 @@ bash scripts/run-agent.sh qa --ticket PLAN-001
 
 ---
 
-## 로그 조회
+## View Logs
 
 \`\`\`bash
 bash scripts/show-logs.sh
@@ -348,11 +348,11 @@ bash scripts/show-logs.sh
 
 ---
 
-**생성 일시**: $TIMESTAMP
+**Created**: $TIMESTAMP
 EOF
 
-# ── .project-config.json 업데이트 (현재 프로젝트로 설정) ─────────
-echo "📝 .project-config.json 업데이트 중..."
+# ── Update .project-config.json (set as current project) ───
+echo "📝 Updating .project-config.json..."
 
 cat > "$CONFIG_FILE" <<EOF
 {
@@ -362,35 +362,35 @@ cat > "$CONFIG_FILE" <<EOF
 }
 EOF
 
-# ── 완료 메시지 ─────────────────────────────────────────────────
+# ── Completion message ──────────────────────────────────────
 echo ""
-echo "✅ 프로젝트 초기화 완료!"
+echo "✅ Project initialization complete!"
 echo ""
-echo "📁 프로젝트 경로: $PROJECT_PATH"
-echo "📊 프로젝트 타입: $PROJECT_TYPE"
-echo "💻 언어/프레임워크: $LANGUAGE / $FRAMEWORK"
+echo "📁 Project path: $PROJECT_PATH"
+echo "📊 Project type: $PROJECT_TYPE"
+echo "💻 Language/Framework: $LANGUAGE / $FRAMEWORK"
 echo ""
-echo "📋 생성된 디렉토리:"
-echo "  - planning/tickets/       티켓 파일"
-echo "  - planning/specs/         명세서"
-echo "  - planning/test-cases/    테스트 케이스"
-echo "  - src/                    소스 코드 (Stack Initializer가 구조 생성)"
-echo "  - logs/                   에이전트 로그"
+echo "📋 Created directories:"
+echo "  - planning/tickets/       Ticket files"
+echo "  - planning/specs/         Specifications"
+echo "  - planning/test-cases/    Test cases"
+echo "  - src/                    Source code (Stack Initializer creates structure)"
+echo "  - logs/                   Agent logs"
 echo ""
-echo "🚀 다음 단계:"
+echo "🚀 Next steps:"
 echo ""
-echo "1. Stack Initializer 실행 (코딩 룰 생성 + 프로젝트 구조 초기화):"
+echo "1. Run Stack Initializer (generate coding rules + initialize project structure):"
 echo "   bash scripts/run-agent.sh stack-initializer"
 echo ""
-echo "2. 티켓 생성:"
-echo "   bash scripts/run-agent.sh project-planner --project \"프로젝트 설명\""
+echo "2. Create tickets:"
+echo "   bash scripts/run-agent.sh project-planner --project \"Project description\""
 echo ""
-echo "3. 명세서 생성:"
+echo "3. Generate specifications:"
 echo "   bash scripts/run-agent.sh pm --ticket-file projects/$PROJECT_NAME/planning/tickets/PLAN-001-*.md"
 echo ""
-echo "4. 코딩:"
+echo "4. Coding:"
 echo "   bash scripts/run-agent.sh coding --ticket PLAN-001"
 echo ""
-echo "5. 테스트:"
+echo "5. Testing:"
 echo "   bash scripts/run-agent.sh qa --ticket PLAN-001"
 echo ""

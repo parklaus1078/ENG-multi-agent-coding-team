@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Rate Limit 추적 및 체크 스크립트
-Claude Max 5x: 5시간 롤링 윈도우 기준
+Rate limit tracking and check script
+Claude Max 5x: Based on 5-hour rolling window
 
-사용법: python3 scripts/parse_usage.py <agent_name> [--log]
-  --log: 현재 실행을 로그에 기록 (run-agent.sh에서 호출 시)
+Usage: python3 scripts/parse_usage.py <agent_name> [--log]
+  --log: Log current execution to log (when called by run-agent.sh)
 """
 
 import json
@@ -13,17 +13,17 @@ import time
 from pathlib import Path
 from datetime import datetime
 
-# ── 설정 ──────────────────────────────────────────────────
+# ── Configuration ──────────────────────────────────────────
 USAGE_LOG_DIR = Path.home() / ".claude-agents"
 USAGE_LOG_FILE = USAGE_LOG_DIR / "usage.log"
 WINDOW_HOURS = 5
 WINDOW_SECONDS = WINDOW_HOURS * 3600
 
-# 임계값: 5시간 윈도우 내 에이전트 실행 횟수 기준
-# Claude Max 실제 한도를 정확히 알 수 없으므로 보수적으로 설정
-# 실제 사용 패턴을 보며 WARN_THRESHOLD, STOP_THRESHOLD를 조정할 것
-WARN_THRESHOLD = 35   # 이 횟수 이상이면 경고
-STOP_THRESHOLD = 45   # 이 횟수 이상이면 중단 권고
+# Thresholds: Based on agent execution count within 5-hour window
+# Set conservatively since Claude Max actual limit is unknown
+# Adjust WARN_THRESHOLD and STOP_THRESHOLD based on actual usage patterns
+WARN_THRESHOLD = 35   # Warn if at or above this count
+STOP_THRESHOLD = 45   # Recommend halt if at or above this count
 # ───────────────────────────────────────────────────────────
 
 
@@ -51,7 +51,7 @@ def get_recent_entries(entries):
 
 
 def log_invocation(agent_name):
-    """현재 에이전트 실행을 로그에 기록"""
+    """Log current agent execution"""
     ensure_log_dir()
     entries = load_log()
     entries.append({
@@ -59,7 +59,7 @@ def log_invocation(agent_name):
         "agent": agent_name,
         "datetime": datetime.now().isoformat()
     })
-    # 오래된 항목 정리 (24시간 이상)
+    # Clean up old entries (over 24 hours)
     entries = [e for e in entries if e["timestamp"] > time.time() - 86400]
     save_log(entries)
 
@@ -82,22 +82,22 @@ def check_rate_limit(agent_name):
 
     if count >= STOP_THRESHOLD:
         msg = (
-            f"[STOP] Rate Limit 임박으로 작업을 중단합니다.\n"
-            f"  현재 {WINDOW_HOURS}시간 윈도우 내 실행 횟수: {count}회 (한도 권고: {STOP_THRESHOLD}회)\n"
-            f"  약 {reset_in_minutes}분 후 윈도우가 초기화됩니다.\n"
-            f"  초기화 후 다시 실행해주세요."
+            f"[STOP] Halting work due to imminent rate limit.\n"
+            f"  Current execution count in {WINDOW_HOURS}-hour window: {count} times (recommended limit: {STOP_THRESHOLD} times)\n"
+            f"  Window will reset in approximately {reset_in_minutes} minutes.\n"
+            f"  Please run again after reset."
         )
         return "stop", count, msg
     elif count >= WARN_THRESHOLD:
         msg = (
-            f"[WARN] Rate Limit 경고: 현재 {WINDOW_HOURS}시간 내 {count}회 실행됨 (경고 기준: {WARN_THRESHOLD}회)\n"
-            f"  약 {reset_in_minutes}분 후 윈도우 초기화 예정.\n"
-            f"  계속 진행하시겠습니까? (사용자 확인 후 진행)"
+            f"[WARN] Rate limit warning: {count} executions in {WINDOW_HOURS} hours (warning threshold: {WARN_THRESHOLD} times)\n"
+            f"  Window reset expected in approximately {reset_in_minutes} minutes.\n"
+            f"  Continue? (user confirmation required to proceed)"
         )
         return "warn", count, msg
     else:
         remaining = STOP_THRESHOLD - count
-        msg = f"[OK] Rate Limit 여유 있음: {WINDOW_HOURS}시간 내 {count}회 실행됨 (여유: {remaining}회)"
+        msg = f"[OK] Rate limit available: {count} executions in {WINDOW_HOURS} hours (remaining: {remaining} times)"
         return "ok", count, msg
 
 

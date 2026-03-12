@@ -14,17 +14,14 @@
 
   "branch_naming": {
     "prefix_by_agent": {
-      "pm": "docs",
       "coding": "feature",
       "qa": "test"
     },
     "base_branch_by_agent": {
-      "pm": "base_branch",
       "coding": "base_branch",
       "qa": "feature_branch"
     },
     "examples": {
-      "pm": "docs/PLAN-001-user-auth (from main/dev)",
       "coding": "feature/PLAN-001-user-auth (from main/dev)",
       "qa": "test/PLAN-001-user-auth (from feature/PLAN-001-user-auth)"
     }
@@ -33,7 +30,6 @@
   "commit_message_template": {
     "format": "{type}({ticket}): {description}\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>",
     "types": {
-      "pm": "docs",
       "coding": "feat",
       "qa": "test"
     }
@@ -47,13 +43,13 @@
 
   "comments": {
     "version": "v0.0.2 - Tech Stack Agnostic Multi-Agent System",
-    "base_branch": "PM/Coding 에이전트가 새 브랜치를 생성할 때 베이스로 사용할 브랜치 (예: main, dev)",
-    "qa_strategy": "QA 에이전트는 동일한 티켓의 feature 브랜치를 베이스로 test 브랜치를 생성",
+    "base_branch": "Base branch for PM/Coding agents when creating new branches (e.g., main, dev)",
+    "qa_strategy": "QA agent creates test branch based on feature branch of same ticket",
     "branch_flow": "main/dev → feature/PLAN-XXX → test/PLAN-XXX",
-    "naming_convention": "{ticket-number}와 {slug}는 자동으로 치환됨",
-    "auto_create": "브랜치가 없으면 자동 생성 여부",
-    "auto_checkout": "브랜치를 자동으로 체크아웃할지 여부",
-    "auto_commit": "작업 완료 후 자동 커밋 여부 (false 권장 - 사람이 검토 후 커밋)",
-    "auto_push": "자동 푸시 여부 (false 권장 - 사람이 검토 후 푸시)"
+    "naming_convention": "{ticket-number} and {slug} are automatically replaced",
+    "auto_create": "Whether to auto-create branch if it doesn't exist",
+    "auto_checkout": "Whether to auto-checkout branch",
+    "auto_commit": "Whether to auto-commit after work completion (false recommended - human review before commit)",
+    "auto_push": "Whether to auto-push (false recommended - human review before push)"
   }
 }

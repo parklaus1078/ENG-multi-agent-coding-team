@@ -1,43 +1,43 @@
 ---
-name: 기능 제안
-about: 새로운 아이디어나 개선 사항을 제안합니다
+name: Feature Request
+about: Suggest a new idea or improvement
 title: "[Feature] "
 labels: enhancement
 assignees: ""
 ---
 
-## 어떤 문제를 해결하나요?
+## What problem does this solve?
 
-겪고 있는 문제나 제한 사항을 설명해 주세요.
-
----
-
-## 제안하는 해결 방법
-
-어떻게 동작하면 좋을까요?
+Describe the problem or limitation you're experiencing.
 
 ---
 
-## 고려한 대안
+## Proposed Solution
 
-다른 접근 방식이 있다면 적어 주세요.
+How should it work?
 
 ---
 
-## 프로젝트의 어떤 부분에 영향을 주나요?
+## Alternatives Considered
 
-- [ ] Project Planner 에이전트
-- [ ] PM 에이전트
-- [ ] Coding 에이전트
-- [ ] QA 에이전트
+If there are other approaches, describe them here.
+
+---
+
+## Which part of the project does this affect?
+
+- [ ] Project Planner agent
+- [ ] PM agent
+- [ ] Coding agent
+- [ ] QA agent
 - [ ] `scripts/`
 - [ ] `.rules/`
 - [ ] `.agents/`
-- [ ] 문서
-- [ ] 기타: 
+- [ ] Documentation
+- [ ] Other: 
 
 ---
 
-## 추가 맥락
+## Additional Context
 
-참고할 목업, 예시, 레퍼런스가 있다면 적어 주세요.
+Add mockups, examples, or references if available.

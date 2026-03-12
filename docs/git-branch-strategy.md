@@ -1,15 +1,15 @@
-# Git 브랜치 전략
+# Git Branch Strategy
 
-멀티 에이전트 시스템의 Git 브랜치 전략 상세 가이드
+Detailed guide for the multi-agent system's Git branch strategy
 
 ---
 
-## 📌 핵심 원칙
+## 📌 Core Principles
 
-### 브랜치 흐름
+### Branch Flow
 
 ```
-main/dev (베이스 브랜치)
+main/dev (base branch)
   │
   ├─ docs/PLAN-001-xxx        (PM Agent)
   │
@@ -18,105 +18,105 @@ main/dev (베이스 브랜치)
        └─ test/PLAN-001-xxx   (QA Agent)
 ```
 
-**중요:**
-- **PM, Coding Agent**: `base_branch` (main/dev)에서 분기
-- **QA Agent**: 동일한 티켓의 **feature 브랜치**에서 분기
+**Important:**
+- **PM, Coding Agent**: Branch from `base_branch` (main/dev)
+- **QA Agent**: Branch from **feature branch** of the same ticket
 
 ---
 
-## 🌿 에이전트별 브랜치 전략
+## 🌿 Branch Strategy by Agent
 
 ### 1. PM Agent
 
-**브랜치 패턴**: `docs/{티켓번호}-{slug}`
+**Branch Pattern**: `docs/{ticket-number}-{slug}`
 
-**베이스**: base_branch (main/dev)
+**Base**: base_branch (main/dev)
 
-**예시**:
+**Example**:
 ```bash
 bash scripts/run-agent.sh pm --ticket-file projects/my-app/planning/tickets/PLAN-001-user-auth.md
-# → main에서 docs/PLAN-001-user-auth 브랜치 생성
+# → Creates docs/PLAN-001-user-auth branch from main
 ```
 
-**용도**: 명세서 및 테스트 케이스 작성
+**Purpose**: Write specifications and test cases
 
 ---
 
 ### 2. Coding Agent
 
-**브랜치 패턴**: `feature/{티켓번호}-{slug}`
+**Branch Pattern**: `feature/{ticket-number}-{slug}`
 
-**베이스**: base_branch (main/dev)
+**Base**: base_branch (main/dev)
 
-**예시**:
+**Example**:
 ```bash
 bash scripts/run-agent.sh coding --ticket PLAN-001
-# → main에서 feature/PLAN-001-user-auth 브랜치 생성
+# → Creates feature/PLAN-001-user-auth branch from main
 ```
 
-**용도**: 실제 코드 구현
+**Purpose**: Implement actual code
 
 ---
 
 ### 3. QA Agent
 
-**브랜치 패턴**: `test/{티켓번호}-{slug}`
+**Branch Pattern**: `test/{ticket-number}-{slug}`
 
-**베이스**: **feature 브랜치** (동일 티켓)
+**Base**: **feature branch** (same ticket)
 
-**예시**:
+**Example**:
 ```bash
 bash scripts/run-agent.sh qa --ticket PLAN-001
-# → feature/PLAN-001-user-auth에서 test/PLAN-001-user-auth 브랜치 생성
+# → Creates test/PLAN-001-user-auth branch from feature/PLAN-001-user-auth
 ```
 
-**용도**: 테스트 코드 작성
+**Purpose**: Write test code
 
-**중요 사항**:
-- QA Agent를 실행하기 전에 반드시 Coding Agent를 먼저 실행해야 합니다
-- feature 브랜치가 없으면 경고 메시지를 표시하고 base_branch를 사용합니다
+**Important Notes**:
+- Coding Agent must be run before QA Agent
+- If feature branch doesn't exist, displays warning and uses base_branch
 
 ---
 
-## 🔄 전체 워크플로우 예시
+## 🔄 Complete Workflow Example
 
-### 시나리오: PLAN-001 유저 인증 기능 개발
+### Scenario: PLAN-001 User Authentication Feature Development
 
 ```bash
 cd team
 
-# 1. PM Agent: 명세서 작성
+# 1. PM Agent: Write specifications
 bash scripts/run-agent.sh pm --ticket-file projects/my-app/planning/tickets/PLAN-001-user-auth.md
-# → docs/PLAN-001-user-auth 브랜치 생성 (from main)
+# → Creates docs/PLAN-001-user-auth branch (from main)
 
 cd projects/my-app
 git add .
-git commit -m "docs(PLAN-001): 유저 인증 명세서 작성"
+git commit -m "docs(PLAN-001): write user authentication specifications"
 git push origin docs/PLAN-001-user-auth
 cd ../..
 
-# 2. Coding Agent: 코드 구현
+# 2. Coding Agent: Implement code
 bash scripts/run-agent.sh coding --ticket PLAN-001
-# → feature/PLAN-001-user-auth 브랜치 생성 (from main)
+# → Creates feature/PLAN-001-user-auth branch (from main)
 
 cd projects/my-app
 git add .
-git commit -m "feat(PLAN-001): 유저 인증 구현"
+git commit -m "feat(PLAN-001): implement user authentication"
 git push origin feature/PLAN-001-user-auth
 cd ../..
 
-# 3. QA Agent: 테스트 작성
+# 3. QA Agent: Write tests
 bash scripts/run-agent.sh qa --ticket PLAN-001
-# → test/PLAN-001-user-auth 브랜치 생성 (from feature/PLAN-001-user-auth)
+# → Creates test/PLAN-001-user-auth branch (from feature/PLAN-001-user-auth)
 
 cd projects/my-app
 git add .
-git commit -m "test(PLAN-001): 유저 인증 테스트 작성"
+git commit -m "test(PLAN-001): write user authentication tests"
 git push origin test/PLAN-001-user-auth
 cd ../..
 ```
 
-### 브랜치 구조 (최종)
+### Branch Structure (Final)
 
 ```
 my-app/.git/
@@ -128,7 +128,7 @@ my-app/.git/
 
 ---
 
-## ⚙️ 설정 파일
+## ⚙️ Configuration File
 
 ### `.config/git-workflow.json`
 
@@ -150,33 +150,33 @@ my-app/.git/
 }
 ```
 
-**주요 설정**:
-- `base_branch`: PM/Coding이 사용할 베이스 브랜치 (main, dev 등)
-- `qa`: feature_branch 사용 (동일 티켓)
+**Key Settings**:
+- `base_branch`: Base branch for PM/Coding (main, dev, etc.)
+- `qa`: Uses feature_branch (same ticket)
 
 ---
 
-## 🔧 수동 브랜치 관리
+## 🔧 Manual Branch Management
 
-### 브랜치 준비 (에이전트가 자동 실행)
+### Prepare Branch (Automatically run by agents)
 
 ```bash
-# Coding Agent용
+# For Coding Agent
 bash scripts/git-branch-helper.sh prepare coding PLAN-001 user-auth
-# → main에서 feature/PLAN-001-user-auth 생성
+# → Creates feature/PLAN-001-user-auth from main
 
-# QA Agent용
+# For QA Agent
 bash scripts/git-branch-helper.sh prepare qa PLAN-001 user-auth
-# → feature/PLAN-001-user-auth에서 test/PLAN-001-user-auth 생성
+# → Creates test/PLAN-001-user-auth from feature/PLAN-001-user-auth
 ```
 
-### 현재 상태 확인
+### Check Current Status
 
 ```bash
 bash scripts/git-branch-helper.sh status
 ```
 
-### 설정 확인
+### Check Configuration
 
 ```bash
 bash scripts/git-branch-helper.sh config
@@ -184,28 +184,28 @@ bash scripts/git-branch-helper.sh config
 
 ---
 
-## 🚨 주의사항
+## 🚨 Warnings
 
-### 1. QA Agent 실행 순서
+### 1. QA Agent Execution Order
 
-❌ **잘못된 순서**:
+❌ **Wrong Order**:
 ```bash
 bash scripts/run-agent.sh qa --ticket PLAN-001
-# feature 브랜치가 없음 → 경고
+# No feature branch → warning
 ```
 
-✅ **올바른 순서**:
+✅ **Correct Order**:
 ```bash
 bash scripts/run-agent.sh coding --ticket PLAN-001
-# feature 브랜치 생성
+# Creates feature branch
 
 bash scripts/run-agent.sh qa --ticket PLAN-001
-# feature 브랜치에서 test 브랜치 생성
+# Creates test branch from feature branch
 ```
 
-### 2. 베이스 브랜치 변경
+### 2. Changing Base Branch
 
-dev 브랜치를 사용하려면:
+To use dev branch:
 
 ```json
 {
@@ -215,44 +215,44 @@ dev 브랜치를 사용하려면:
 }
 ```
 
-### 3. 프로젝트별 Git
+### 3. Per-Project Git
 
-각 프로젝트는 독립적인 Git 리포지토리입니다:
+Each project is an independent Git repository:
 
 ```
 team/projects/
-├── my-app/.git/           # 프로젝트 A Git
-└── my-blog/.git/          # 프로젝트 B Git
+├── my-app/.git/           # Project A Git
+└── my-blog/.git/          # Project B Git
 ```
 
-브랜치 작업은 **프로젝트 리포지토리 내**에서 수행됩니다.
+Branch operations are performed **within the project repository**.
 
 ---
 
-## 📋 브랜치 네이밍 규칙
+## 📋 Branch Naming Rules
 
-### 패턴
+### Pattern
 
 ```
 {prefix}/{ticket-number}-{slug}
 ```
 
-### 예시
+### Examples
 
-| 티켓 | PM | Coding | QA |
-|-----|-------|--------|-----|
+| Ticket | PM | Coding | QA |
+|--------|-------|--------|-----|
 | PLAN-001-user-auth | `docs/PLAN-001-user-auth` | `feature/PLAN-001-user-auth` | `test/PLAN-001-user-auth` |
 | PLAN-002-todo-crud | `docs/PLAN-002-todo-crud` | `feature/PLAN-002-todo-crud` | `test/PLAN-002-todo-crud` |
 
-### Slug 추출
+### Slug Extraction
 
-티켓 파일명에서 자동 추출:
+Automatically extracted from ticket filename:
 - `PLAN-001-user-auth.md` → slug: `user-auth`
 - `PLAN-002-todo-crud.md` → slug: `todo-crud`
 
 ---
 
-## 🔀 PR (Pull Request) 전략
+## 🔀 PR (Pull Request) Strategy
 
 ### 1. Feature → Main
 
@@ -260,62 +260,62 @@ team/projects/
 cd projects/my-app
 git checkout feature/PLAN-001-user-auth
 git push origin feature/PLAN-001-user-auth
-# GitHub에서 PR: feature/PLAN-001-user-auth → main
+# GitHub PR: feature/PLAN-001-user-auth → main
 ```
 
-### 2. Test → Feature (옵션)
+### 2. Test → Feature (Optional)
 
-테스트를 별도 PR로 관리:
+Manage tests as separate PR:
 
 ```bash
 cd projects/my-app
 git checkout test/PLAN-001-user-auth
 git push origin test/PLAN-001-user-auth
-# GitHub에서 PR: test/PLAN-001-user-auth → feature/PLAN-001-user-auth
+# GitHub PR: test/PLAN-001-user-auth → feature/PLAN-001-user-auth
 ```
 
-### 3. Feature + Test → Main (권장)
+### 3. Feature + Test → Main (Recommended)
 
-feature 브랜치에 test 브랜치를 머지 후 PR:
+Merge test branch into feature branch, then PR:
 
 ```bash
 cd projects/my-app
 git checkout feature/PLAN-001-user-auth
 git merge test/PLAN-001-user-auth
 git push origin feature/PLAN-001-user-auth
-# GitHub에서 PR: feature/PLAN-001-user-auth → main
+# GitHub PR: feature/PLAN-001-user-auth → main
 ```
 
 ---
 
-## 🛠️ 트러블슈팅
+## 🛠️ Troubleshooting
 
-### Q1. feature 브랜치가 없는데 QA를 실행했어요
+### Q1. I ran QA without a feature branch
 
-**현상**:
+**Symptom**:
 ```
-⚠️  feature 브랜치가 없습니다: feature/PLAN-001-user-auth
-   먼저 coding 에이전트를 실행하세요.
-   또는 기본 베이스 브랜치를 사용합니다: main
+⚠️  Feature branch not found: feature/PLAN-001-user-auth
+   Run coding agent first.
+   Or using default base branch: main
 ```
 
-**해결**:
-1. Coding Agent를 먼저 실행
-2. 또는 main에서 test 브랜치 생성 (권장하지 않음)
+**Solution**:
+1. Run Coding Agent first
+2. Or create test branch from main (not recommended)
 
-### Q2. 브랜치가 자동으로 생성되지 않아요
+### Q2. Branches aren't created automatically
 
-**확인사항**:
+**Check**:
 ```bash
-# 설정 확인
+# Check configuration
 cat .config/git-workflow.json
 
-# auto_create가 true인지 확인
+# Verify auto_create is true
 ```
 
-### Q3. 다른 베이스 브랜치를 사용하고 싶어요
+### Q3. I want to use a different base branch
 
-**해결**:
+**Solution**:
 ```json
 {
   "branch_strategy": {
@@ -326,5 +326,5 @@ cat .config/git-workflow.json
 
 ---
 
-**버전**: v0.0.2
-**최종 업데이트**: 2026-03-12
+**Version**: v0.0.2
+**Last Updated**: 2026-03-12

@@ -1,8 +1,8 @@
 #!/bin/bash
-# 에이전트 실행 래퍼 스크립트
+# Agent execution wrapper script
 #
-# 사용법:
-#   bash scripts/run-agent.sh project-planner --project "할일 관리 앱"
+# Usage:
+#   bash scripts/run-agent.sh project-planner --project "Todo management app"
 #   bash scripts/run-agent.sh pm              --ticket-file ./tickets/PLAN-001-user-auth.md
 
 set -e
@@ -12,18 +12,18 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(dirname "$SCRIPT_DIR")"
 PROJECT_CONFIG="$WORKSPACE_ROOT/.project-config.json"
 
-# ── 현재 프로젝트 확인 ──────────────────────────────────────
+# ── Check current project ───────────────────────────────────
 if [[ ! -f "$PROJECT_CONFIG" ]]; then
-    echo "❌ 프로젝트 설정 파일이 없습니다: .project-config.json"
-    echo "   먼저 프로젝트를 초기화하세요:"
+    echo "❌ Project configuration file not found: .project-config.json"
+    echo "   Initialize project first:"
     echo "   bash scripts/init-project.sh --interactive"
     exit 1
 fi
 
 CURRENT_PROJECT=$(grep -o '"current_project": *"[^"]*"' "$PROJECT_CONFIG" | cut -d'"' -f4 2>/dev/null)
 if [[ -z "$CURRENT_PROJECT" ]]; then
-    echo "❌ 현재 활성 프로젝트가 없습니다."
-    echo "   프로젝트를 초기화하거나 전환하세요:"
+    echo "❌ No active project."
+    echo "   Initialize or switch project:"
     echo "   bash scripts/init-project.sh --interactive"
     echo "   bash scripts/switch-project.sh <project-name>"
     exit 1
@@ -31,28 +31,28 @@ fi
 
 PROJECT_PATH="$WORKSPACE_ROOT/projects/$CURRENT_PROJECT"
 if [[ ! -d "$PROJECT_PATH" ]]; then
-    echo "❌ 프로젝트 디렉토리를 찾을 수 없습니다: $PROJECT_PATH"
+    echo "❌ Project directory not found: $PROJECT_PATH"
     exit 1
 fi
 
 echo ""
-echo "📍 현재 프로젝트: $CURRENT_PROJECT"
-echo "📂 경로: $PROJECT_PATH"
+echo "📍 Current project: $CURRENT_PROJECT"
+echo "📂 Path: $PROJECT_PATH"
 echo ""
 
-# ── 유효성 체크 ─────────────────────────────────────────────
+# ── Validation check ────────────────────────────────────────
 VALID_AGENTS=("stack-initializer" "project-planner" "pm" "coding" "qa")
 
 if [[ -z "$AGENT_NAME" ]]; then
     echo ""
-    echo "사용법: bash scripts/run-agent.sh <agent_name> [options]"
+    echo "Usage: bash scripts/run-agent.sh <agent_name> [options]"
     echo ""
-    echo "에이전트 목록:"
-    echo "  stack-initializer --config <경로>           스택 초기화"
-    echo "  project-planner   --project <설명>          프로젝트 분해 → tickets/ 생성"
-    echo "  pm                --ticket-file <경로>      티켓 → 명세서 생성"
-    echo "  coding            --ticket <티켓번호>        코드 구현 (모든 타입)"
-    echo "  qa                --ticket <티켓번호>        테스트 작성 (모든 타입)"
+    echo "Agent list:"
+    echo "  stack-initializer --config <path>           Stack initialization"
+    echo "  project-planner   --project <description>   Project breakdown → create tickets/"
+    echo "  pm                --ticket-file <path>      Ticket → generate specifications"
+    echo "  coding            --ticket <ticket-number>  Code implementation (all types)"
+    echo "  qa                --ticket <ticket-number>  Write tests (all types)"
     echo ""
     exit 1
 fi
@@ -63,13 +63,13 @@ for a in "${VALID_AGENTS[@]}"; do
 done
 
 if [[ "$VALID" == false ]]; then
-    echo "❌ 알 수 없는 에이전트: '$AGENT_NAME'"
-    echo "   사용 가능: ${VALID_AGENTS[*]}"
+    echo "❌ Unknown agent: '$AGENT_NAME'"
+    echo "   Available: ${VALID_AGENTS[*]}"
     exit 1
 fi
 
-# ── 플래그 파싱 ──────────────────────────────────────────────
-shift  # agent_name 제거 후 나머지 플래그 파싱
+# ── Parse flags ─────────────────────────────────────────────
+shift  # Remove agent_name, parse remaining flags
 TICKET_FILE=""
 TICKET_NUM=""
 PROJECT_DESC=""
@@ -99,47 +99,47 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         *)
-            echo "❌ 알 수 없는 옵션: '$1'"
+            echo "❌ Unknown option: '$1'"
             exit 1
             ;;
     esac
 done
 
-# ── 에이전트별 필수 옵션 검증 및 초기 프롬프트 설정 ────────────
+# ── Validate agent-specific required options and set initial prompt ──
 case "$AGENT_NAME" in
     stack-initializer)
         if [[ -z "$CONFIG_FILE" ]]; then
-            # .project-config.json이 있으면 사용
+            # Use .project-config.json if it exists
             if [[ -f "$WORKSPACE_ROOT/.project-config.json" ]]; then
                 CONFIG_FILE="$WORKSPACE_ROOT/.project-config.json"
             else
-                echo "❌ stack-initializer는 --config 옵션이 필요합니다."
-                echo "   또는 .project-config.json 파일이 존재해야 합니다."
-                echo "   예: bash scripts/init-project.sh"
+                echo "❌ stack-initializer requires --config option."
+                echo "   Or .project-config.json file must exist."
+                echo "   Example: bash scripts/init-project.sh"
                 exit 1
             fi
         fi
         if [[ ! -f "$CONFIG_FILE" ]]; then
-            echo "❌ 설정 파일을 찾을 수 없습니다: $CONFIG_FILE"
+            echo "❌ Configuration file not found: $CONFIG_FILE"
             exit 1
         fi
-        INITIAL_PROMPT="프로젝트 설정 파일을 읽고 스택을 초기화합니다: $CONFIG_FILE"
+        INITIAL_PROMPT="Read project configuration file and initialize stack: $CONFIG_FILE"
         ;;
     project-planner)
         if [[ "$RESUME_MODE" == true ]]; then
-            # 재개 모드: 계획 파일 존재 여부 확인
+            # Resume mode: check if plan file exists
             LATEST_PLAN=$(ls -t "$PROJECT_PATH/planning/tickets/.plan-"*.json 2>/dev/null | head -1)
             if [[ -z "$LATEST_PLAN" ]]; then
-                echo "❌ 재개할 계획 파일을 찾을 수 없습니다."
-                echo "   $PROJECT_PATH/planning/tickets/.plan-*.json 파일이 필요합니다."
+                echo "❌ Plan file to resume not found."
+                echo "   $PROJECT_PATH/planning/tickets/.plan-*.json file required."
                 exit 1
             fi
-            INITIAL_PROMPT="재개: Phase 2부터 티켓 파일을 생성합니다. 계획 파일: $LATEST_PLAN"
+            INITIAL_PROMPT="Resume: Generate ticket files from Phase 2. Plan file: $LATEST_PLAN"
         else
             if [[ -z "$PROJECT_DESC" ]]; then
-                echo "❌ project-planner는 --project 옵션이 필요합니다."
-                echo "   예: bash scripts/run-agent.sh project-planner --project \"할일 관리 앱\""
-                echo "   재개: bash scripts/run-agent.sh project-planner --resume"
+                echo "❌ project-planner requires --project option."
+                echo "   Example: bash scripts/run-agent.sh project-planner --project \"Todo management app\""
+                echo "   Resume: bash scripts/run-agent.sh project-planner --resume"
                 exit 1
             fi
             INITIAL_PROMPT="$PROJECT_DESC"
@@ -147,32 +147,32 @@ case "$AGENT_NAME" in
         ;;
     pm)
         if [[ -z "$TICKET_FILE" ]]; then
-            echo "❌ pm은 --ticket-file 옵션이 필요합니다."
-            echo "   예: bash scripts/run-agent.sh pm --ticket-file $PROJECT_PATH/planning/tickets/PLAN-001-user-auth.md"
+            echo "❌ pm requires --ticket-file option."
+            echo "   Example: bash scripts/run-agent.sh pm --ticket-file $PROJECT_PATH/planning/tickets/PLAN-001-user-auth.md"
             exit 1
         fi
-        # 상대 경로를 절대 경로로 변환
+        # Convert relative path to absolute path
         if [[ ! "$TICKET_FILE" =~ ^/ ]]; then
             TICKET_FILE="$WORKSPACE_ROOT/$TICKET_FILE"
         fi
         if [[ ! -f "$TICKET_FILE" ]]; then
-            echo "❌ 티켓 파일을 찾을 수 없습니다: $TICKET_FILE"
+            echo "❌ Ticket file not found: $TICKET_FILE"
             exit 1
         fi
 
-        # Git 브랜치 자동 생성 (티켓 파일에서 티켓 번호와 slug 추출)
+        # Auto-create Git branch (extract ticket number and slug from ticket file)
         FILENAME=$(basename "$TICKET_FILE")
-        # PLAN-001-user-auth.md에서 PLAN-001 추출
+        # Extract PLAN-001 from PLAN-001-user-auth.md
         TICKET_NUM=$(echo "$FILENAME" | grep -o '^PLAN-[0-9]*')
-        # user-auth 추출
+        # Extract user-auth
         SLUG=$(echo "$FILENAME" | sed "s/${TICKET_NUM}-//" | sed 's/\.md$//')
 
         if [[ -n "$TICKET_NUM" ]] && [[ -n "$SLUG" ]]; then
-            echo "🌿 Git 브랜치 자동 생성 중..."
+            echo "🌿 Auto-creating Git branch..."
             if bash "$SCRIPT_DIR/git-branch-helper.sh" prepare "pm" "$TICKET_NUM" "$SLUG" 2>/dev/null; then
-                echo "✅ 브랜치 준비 완료"
+                echo "✅ Branch ready"
             else
-                echo "⚠️  브랜치 생성 실패 (Git 설정 확인 필요, 작업은 계속됩니다)"
+                echo "⚠️  Branch creation failed (check Git settings, work continues)"
             fi
             echo ""
         fi
@@ -181,71 +181,71 @@ case "$AGENT_NAME" in
         ;;
     coding|qa)
         if [[ -z "$TICKET_NUM" ]]; then
-            echo "❌ $AGENT_NAME 은 --ticket 옵션이 필요합니다."
-            echo "   예: bash scripts/run-agent.sh $AGENT_NAME --ticket PLAN-001"
+            echo "❌ $AGENT_NAME requires --ticket option."
+            echo "   Example: bash scripts/run-agent.sh $AGENT_NAME --ticket PLAN-001"
             exit 1
         fi
 
-        # Git 브랜치 자동 생성 (티켓 파일에서 slug 추출)
+        # Auto-create Git branch (extract slug from ticket file)
         TICKET_FILE_PATTERN="$PROJECT_PATH/planning/tickets/${TICKET_NUM}-*.md"
         TICKET_FILE_FOUND=$(ls $TICKET_FILE_PATTERN 2>/dev/null | head -1)
 
         if [[ -n "$TICKET_FILE_FOUND" ]]; then
-            # 파일명에서 slug 추출 (PLAN-001-user-auth.md → user-auth)
+            # Extract slug from filename (PLAN-001-user-auth.md → user-auth)
             FILENAME=$(basename "$TICKET_FILE_FOUND")
             SLUG=$(echo "$FILENAME" | sed "s/${TICKET_NUM}-//" | sed 's/\.md$//')
 
-            echo "🌿 Git 브랜치 자동 생성 중..."
+            echo "🌿 Auto-creating Git branch..."
             if bash "$SCRIPT_DIR/git-branch-helper.sh" prepare "$AGENT_NAME" "$TICKET_NUM" "$SLUG" 2>/dev/null; then
-                echo "✅ 브랜치 준비 완료"
+                echo "✅ Branch ready"
             else
-                echo "⚠️  브랜치 생성 실패 (Git 설정 확인 필요, 작업은 계속됩니다)"
+                echo "⚠️  Branch creation failed (check Git settings, work continues)"
             fi
             echo ""
         fi
 
-        INITIAL_PROMPT="$TICKET_NUM 티켓을 작업합니다."
+        INITIAL_PROMPT="Working on ticket $TICKET_NUM."
         ;;
 esac
 
-# ── CLAUDE.md 존재 확인 ──────────────────────────────────────
+# ── Check CLAUDE.md existence ───────────────────────────────
 AGENT_DIR="$WORKSPACE_ROOT/.agents/$AGENT_NAME"
 CLAUDE_MD="$AGENT_DIR/CLAUDE.md"
 
 if [[ ! -f "$CLAUDE_MD" ]]; then
-    echo "❌ CLAUDE.md를 찾을 수 없습니다: $CLAUDE_MD"
+    echo "❌ CLAUDE.md not found: $CLAUDE_MD"
     exit 1
 fi
 
-# ── claude CLI 확인 ──────────────────────────────────────────
+# ── Check claude CLI ────────────────────────────────────────
 if ! command -v claude &>/dev/null; then
-    echo "❌ claude CLI를 찾을 수 없습니다."
-    echo "   Claude Code가 설치되어 있는지 확인하세요."
-    echo "   설치: https://docs.claude.ai/claude-code"
+    echo "❌ claude CLI not found."
+    echo "   Verify Claude Code is installed."
+    echo "   Installation: https://docs.claude.ai/claude-code"
     exit 1
 fi
 
-# ── Rate Limit 사전 기록 ─────────────────────────────────────
+# ── Pre-log rate limit ──────────────────────────────────────
 python3 "$SCRIPT_DIR/parse_usage.py" "$AGENT_NAME" --log 2>/dev/null || true
 
-# ── 에이전트 시작 ────────────────────────────────────────────
+# ── Start agent ─────────────────────────────────────────────
 echo ""
 echo "╔══════════════════════════════════════════════╗"
-echo "║  에이전트 시작: $AGENT_NAME"
-echo "║  워크스페이스: $WORKSPACE_ROOT"
-echo "║  지시 파일: .agents/$AGENT_NAME/CLAUDE.md"
+echo "║  Agent starting: $AGENT_NAME"
+echo "║  Workspace: $WORKSPACE_ROOT"
+echo "║  Instruction file: .agents/$AGENT_NAME/CLAUDE.md"
 echo "╚══════════════════════════════════════════════╝"
 echo ""
-echo "💡 에이전트가 Rate Limit 체크를 자동으로 수행합니다."
-echo "   종료: Ctrl+C"
+echo "💡 Agent will automatically perform rate limit check."
+echo "   Exit: Ctrl+C"
 echo ""
 
-# ── claude 실행 ──────────────────────────────────────────────
-# --append-system-prompt: Claude Code 기본값을 유지하면서 CLAUDE.md를 추가
-# (--system-prompt 사용 시 Claude Code 내장 도구 설명이 제거되므로 사용 금지)
+# ── Execute claude ──────────────────────────────────────────
+# --append-system-prompt: Keep Claude Code defaults while adding CLAUDE.md
+# (Using --system-prompt removes Claude Code built-in tool descriptions, so prohibited)
 
-# 대화형 모드로 시작 (--print 제거)
-echo "📝 초기 프롬프트를 전달합니다..."
+# Start in interactive mode (removed --print)
+echo "📝 Sending initial prompt..."
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "$INITIAL_PROMPT"

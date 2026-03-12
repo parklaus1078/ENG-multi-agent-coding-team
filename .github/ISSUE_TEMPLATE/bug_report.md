@@ -1,12 +1,12 @@
 ---
-name: 버그 리포트
-about: 예상과 다르게 동작하는 경우
+name: Bug Report
+about: When something doesn't work as expected
 title: "[Bug] "
 labels: bug
 assignees: ""
 ---
 
-## 어떤 에이전트에 영향이 있나요?
+## Which agent is affected?
 
 - [ ] `project-planner`
 - [ ] `pm`
@@ -14,11 +14,11 @@ assignees: ""
 - [ ] `qa`
 - [ ] `scripts/run-agent.sh`
 - [ ] `scripts/rate-limit-check.sh`
-- [ ] 기타: 
+- [ ] Other: 
 
 ---
 
-## 재현 단계
+## Steps to Reproduce
 
 1. 
 2. 
@@ -26,30 +26,30 @@ assignees: ""
 
 ---
 
-## 예상 동작
+## Expected Behavior
 
-어떻게 동작할 것으로 예상했나요?
-
----
-
-## 실제 동작
-
-실제로 어떻게 되었나요? 에러 출력이 있다면 아래에 붙여넣어 주세요.
-
-```
-(에러 출력을 여기에 붙여넣으세요)
-```
+What did you expect to happen?
 
 ---
 
-## 환경
+## Actual Behavior
 
-- Claude Code 버전 (`claude --version`): 
+What actually happened? If there's error output, paste it below.
+
+```
+(Paste error output here)
+```
+
+---
+
+## Environment
+
+- Claude Code version (`claude --version`): 
 - OS: 
 - Shell: 
 
 ---
 
-## 추가 맥락
+## Additional Context
 
-도움이 될 만한 다른 정보 (스크린샷, 관련 이슈 등)
+Any other helpful information (screenshots, related issues, etc.)

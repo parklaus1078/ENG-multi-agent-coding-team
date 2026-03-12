@@ -1,211 +1,211 @@
-# 시스템 개선 가이드
+# System Improvement Guide
 
-> 멀티 에이전트 시스템 개발자를 위한 기여 가이드
+> Contributing guide for multi-agent system developers
 
-**버전**: v0.0.2
-**최종 업데이트**: 2026-03-12
-**대상**: 시스템 개발자
-
----
-
-## 🎯 이 문서의 목적
-
-이 문서는 멀티 에이전트 **시스템 자체**를 개선하는 개발자를 위한 가이드입니다.
-
-시스템 사용자가 에이전트를 이용하여 프로젝트를 구현하는 방법은 [루트 README.md](../README.md)를 참고하세요.
+**Version**: v0.0.2
+**Last Updated**: 2026-03-12
+**Audience**: System Developers
 
 ---
 
-## 📂 시스템 구조 이해
+## 🎯 Purpose of This Document
 
-### 핵심 디렉토리
+This document is a guide for developers who improve the multi-agent **system itself**.
+
+For system users who want to implement projects using agents, refer to [root README.md](../README.md).
+
+---
+
+## 📂 Understanding System Structure
+
+### Core Directories
 
 ```
 team/
-├── .agents/              # 에이전트 지시 파일 (CLAUDE.md)
-├── .rules/               # 코딩 룰
-│   ├── _verified/        # 검증된 룰
-│   └── _cache/           # 자동 생성 룰
-├── .config/              # 시스템 설정
-├── scripts/              # 시스템 스크립트
-├── projects/             # 사용자 프로젝트 (독립 Git)
-└── docs/                 # 시스템 문서 (이 디렉토리)
+├── .agents/              # Agent instruction files (CLAUDE.md)
+├── .rules/               # Coding rules
+│   ├── _verified/        # Verified rules
+│   └── _cache/           # Auto-generated rules
+├── .config/              # System configuration
+├── scripts/              # System scripts
+├── projects/             # User projects (independent Git)
+└── docs/                 # System documentation (this directory)
 ```
 
-### 문서 및 로그 구분
+### Documentation and Log Distinction
 
-| 디렉토리 | 목적 | 대상 | 예시 |
-|---------|------|------|-----|
-| `docs/` | 시스템 참고 문서 | 시스템 개발자 | architecture.md, git-branch-strategy.md |
-| `logs-agent_dev/` | 시스템 개발 로그 | 시스템 개발자 | 20260312-v0.0.2-cleanup.md |
-| `team/projects/{name}/logs/` | 프로젝트 구현 로그 | 시스템 사용자 | coding/20260312-PLAN-001.md |
-| 루트 `README.md` | 사용자 가이드 | 시스템 사용자 | 워크플로우, 사용법 |
+| Directory | Purpose | Audience | Example |
+|-----------|---------|----------|---------|
+| `docs/` | System reference documentation | System developers | architecture.md, git-branch-strategy.md |
+| `logs-agent_dev/` | System development logs | System developers | 20260312-v0.0.2-cleanup.md |
+| `team/projects/{name}/logs/` | Project implementation logs | System users | coding/20260312-PLAN-001.md |
+| Root `README.md` | User guide | System users | Workflow, usage |
 
 ---
 
-## 🛠️ 시스템 개선 작업 유형
+## 🛠️ Types of System Improvement Work
 
-### 1. 에이전트 추가/수정
+### 1. Add/Modify Agents
 
-**위치**: `team/.agents/{agent-name}/CLAUDE.md`
+**Location**: `team/.agents/{agent-name}/CLAUDE.md`
 
-**절차**:
-1. 새 에이전트 디렉토리 생성
-2. CLAUDE.md 작성 (프롬프트)
-3. 필요 시 templates/ 디렉토리 추가
-4. `scripts/run-agent.sh`에 case 추가
-5. 테스트 실행
-6. 문서 업데이트 (README.md, architecture.md)
+**Procedure**:
+1. Create new agent directory
+2. Write CLAUDE.md (prompt)
+3. Add templates/ directory if needed
+4. Add case to `scripts/run-agent.sh`
+5. Run tests
+6. Update documentation (README.md, architecture.md)
 
-**예시**:
+**Example**:
 ```bash
-# 새 에이전트 추가
+# Add new agent
 mkdir -p team/.agents/devops
 vim team/.agents/devops/CLAUDE.md
 
-# run-agent.sh 수정
+# Modify run-agent.sh
 vim team/scripts/run-agent.sh
-# case에 devops 추가
+# Add devops to case
 
-# 테스트
+# Test
 cd team
 bash scripts/run-agent.sh devops --help
 ```
 
-### 2. 프로젝트 타입 추가
+### 2. Add Project Type
 
-**영향 범위**:
+**Impact Scope**:
 - `.agents/pm/templates/{new-type}.md`
 - `.agents/coding/templates/{new-type}.md`
 - `.agents/qa/templates/{new-type}.md`
 - `docs/supported-tech-stacks.md`
 - `scripts/init-project.sh`
 
-**절차**:
-1. 프로젝트 타입 정의 (예: `iot-firmware`)
-2. 각 에이전트 템플릿 작성
-3. init-project.sh에 타입 추가
-4. 테스트 프로젝트 생성/검증
-5. 문서 업데이트
+**Procedure**:
+1. Define project type (e.g., `iot-firmware`)
+2. Write templates for each agent
+3. Add type to init-project.sh
+4. Create/verify test project
+5. Update documentation
 
-### 3. 스크립트 개선
+### 3. Improve Scripts
 
-**위치**: `team/scripts/`
+**Location**: `team/scripts/`
 
-**주요 스크립트**:
-- `init-project.sh`: 프로젝트 초기화
-- `run-agent.sh`: 에이전트 실행 래퍼
-- `git-branch-helper.sh`: Git 브랜치 관리
-- `rate-limit-check.sh`: Rate Limit 관리
-- `show-logs.sh`: 로그 조회
+**Main Scripts**:
+- `init-project.sh`: Project initialization
+- `run-agent.sh`: Agent execution wrapper
+- `git-branch-helper.sh`: Git branch management
+- `rate-limit-check.sh`: Rate limit management
+- `show-logs.sh`: Log viewing
 
-**절차**:
-1. 스크립트 수정
-2. 테스트 (다양한 케이스)
-3. 에러 처리 추가
-4. 문서화 (주석, README)
-5. 버전 커밋
+**Procedure**:
+1. Modify script
+2. Test (various cases)
+3. Add error handling
+4. Document (comments, README)
+5. Version commit
 
-### 4. 코딩 룰 추가/개선
+### 4. Add/Improve Coding Rules
 
-**위치**: `team/.rules/`
+**Location**: `team/.rules/`
 
-**구조**:
+**Structure**:
 ```
 .rules/
-├── general-coding-rules.md    # 범용 원칙
-├── _verified/                  # 검증된 룰
+├── general-coding-rules.md    # Universal principles
+├── _verified/                  # Verified rules
 │   └── {project-type}/
 │       └── {framework}-{language}.md
-└── _cache/                     # 자동 생성 (24시간)
+└── _cache/                     # Auto-generated (24 hours)
 ```
 
-**절차**:
-1. Stack Initializer가 생성한 룰 검토 (`_cache/`)
-2. 실제 사용 후 품질 확인
-3. 검증 완료 시 `_verified/`로 이동
-4. 파일명 규칙: `{framework}-{language}.md`
+**Procedure**:
+1. Review rules generated by Stack Initializer (`_cache/`)
+2. Verify quality after actual use
+3. Move to `_verified/` when verified
+4. Filename convention: `{framework}-{language}.md`
 
-**예시**:
+**Example**:
 ```bash
-# 자동 생성된 룰 확인
+# Check auto-generated rules
 cat team/.rules/_cache/cli-tool/cobra-go.md
 
-# 검증 후 이동
+# Move after verification
 mkdir -p team/.rules/_verified/cli-tool
 mv team/.rules/_cache/cli-tool/cobra-go.md \
    team/.rules/_verified/cli-tool/
 
-# 커밋
+# Commit
 git add team/.rules/_verified/cli-tool/cobra-go.md
 git commit -m "rules: verify cobra-go coding rules"
 ```
 
 ---
 
-## 📝 개발 로그 작성
+## 📝 Writing Development Logs
 
-### 시스템 개발 로그 위치
+### System Development Log Location
 
 `logs-agent_dev/`
 
-### 파일명 규칙
+### Filename Convention
 
 ```
 YYYYMMDD-{topic}.md
 ```
 
-**예시**:
+**Examples**:
 - `20260312-v0.0.2-cleanup.md`
 - `20260313-git-branch-improvement.md`
 - `20260314-new-agent-design.md`
 
-### 로그 내용 구조
+### Log Content Structure
 
 ```markdown
-# {작업 제목}
+# {Work Title}
 
-**날짜**: YYYY-MM-DD
-**목적**: 왜 이 작업을 했는가
+**Date**: YYYY-MM-DD
+**Purpose**: Why was this work done
 
-## 변경 사항
+## Changes
 
-### 추가
-- 무엇을 추가했는가
+### Added
+- What was added
 
-### 수정
-- 무엇을 수정했는가
+### Modified
+- What was modified
 
-### 삭제
-- 무엇을 삭제했는가
+### Removed
+- What was removed
 
-## 의사결정
+## Decision Making
 
-### 선택한 방안
-설명
+### Chosen Approach
+Description
 
-### 대안
-- 대안 A: 왜 선택하지 않았는가
-- 대안 B: 왜 선택하지 않았는가
+### Alternatives
+- Alternative A: Why not chosen
+- Alternative B: Why not chosen
 
-## 테스트
+## Testing
 
-수행한 테스트 및 결과
+Tests performed and results
 
-## 다음 작업
+## Next Steps
 
-향후 개선 사항
+Future improvements
 ```
 
 ---
 
-## 🔄 Git 워크플로우
+## 🔄 Git Workflow
 
-### 브랜치 전략 (시스템 개발)
+### Branch Strategy (System Development)
 
-**베이스**: `dev` (시스템 개발 브랜치)
+**Base**: `dev` (system development branch)
 
-**브랜치 패턴**:
+**Branch Patterns**:
 ```
 dev
 ├── feature/system-{feature-name}
@@ -213,44 +213,44 @@ dev
 └── docs/system-{doc-name}
 ```
 
-**예시**:
+**Example**:
 ```bash
 git checkout dev
 git pull origin dev
 
-# 새 기능 개발
+# Develop new feature
 git checkout -b feature/system-iot-firmware-support
-# 작업...
+# Work...
 git add .
 git commit -m "feat: add IoT firmware project type support"
 git push origin feature/system-iot-firmware-support
 # PR: feature/system-iot-firmware-support → dev
 ```
 
-### 커밋 메시지 규칙
+### Commit Message Rules
 
-**포맷**:
+**Format**:
 ```
 {type}({scope}): {description}
 
 {body}
 ```
 
-**타입**:
-- `feat`: 새 기능
-- `fix`: 버그 수정
-- `docs`: 문서만 변경
-- `refactor`: 리팩토링
-- `test`: 테스트 추가/수정
-- `chore`: 빌드, 설정 변경
+**Types**:
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation only changes
+- `refactor`: Refactoring
+- `test`: Add/modify tests
+- `chore`: Build, configuration changes
 
-**스코프** (선택):
-- `agent`: 에이전트 관련
-- `script`: 스크립트 관련
-- `rules`: 코딩 룰 관련
-- `docs`: 문서 관련
+**Scopes** (optional):
+- `agent`: Agent-related
+- `script`: Script-related
+- `rules`: Coding rules-related
+- `docs`: Documentation-related
 
-**예시**:
+**Examples**:
 ```bash
 git commit -m "feat(agent): add DevOps agent for CI/CD automation"
 git commit -m "fix(script): resolve branch detection in git-branch-helper.sh"
@@ -260,26 +260,26 @@ git commit -m "refactor(rules): restructure _verified directory by project type"
 
 ---
 
-## 🧪 테스트
+## 🧪 Testing
 
-### 수동 테스트 체크리스트
+### Manual Testing Checklist
 
-새 기능 추가 시 확인 사항:
+When adding new features, verify:
 
-- [ ] 프로젝트 초기화가 정상 동작하는가
-- [ ] 에이전트가 올바른 템플릿을 로드하는가
-- [ ] Git 브랜치가 올바르게 생성되는가
-- [ ] 로그가 올바른 위치에 생성되는가
-- [ ] Rate Limit 체크가 동작하는가
-- [ ] 다중 프로젝트 전환이 동작하는가
-- [ ] 모든 프로젝트 타입에서 동작하는가
+- [ ] Project initialization works correctly
+- [ ] Agent loads correct templates
+- [ ] Git branches created correctly
+- [ ] Logs created in correct location
+- [ ] Rate limit check works
+- [ ] Multi-project switching works
+- [ ] Works for all project types
 
-### 테스트 프로젝트 생성
+### Create Test Projects
 
 ```bash
 cd team
 
-# 각 타입별 테스트 프로젝트 생성
+# Create test projects for each type
 bash scripts/init-project.sh \
   --type web-fullstack \
   --name test-web-app \
@@ -292,7 +292,7 @@ bash scripts/init-project.sh \
   --language go \
   --framework cobra
 
-# 에이전트 실행 테스트
+# Test agent execution
 bash scripts/run-agent.sh project-planner \
   --project "Test TODO app"
 
@@ -306,24 +306,24 @@ bash scripts/run-agent.sh qa --ticket PLAN-001
 
 ---
 
-## 📚 문서 업데이트
+## 📚 Documentation Updates
 
-### 문서 파일 위치
+### Documentation File Locations
 
-| 파일 | 목적 | 업데이트 시기 |
-|------|------|-------------|
-| `README.md` (루트) | 사용자 가이드 | 사용자 워크플로우 변경 시 |
-| `docs/architecture.md` | 시스템 아키텍처 | 구조 변경 시 |
-| `docs/git-branch-strategy.md` | Git 브랜치 전략 | 브랜치 전략 변경 시 |
-| `docs/supported-tech-stacks.md` | 지원 스택 목록 | 새 스택 추가 시 |
-| `docs/CHANGELOG.md` | 변경 이력 | 모든 릴리스 |
-| `docs/contributing.md` | 이 문서 | 개발 프로세스 변경 시 |
+| File | Purpose | Update When |
+|------|---------|-------------|
+| `README.md` (root) | User guide | User workflow changes |
+| `docs/architecture.md` | System architecture | Structure changes |
+| `docs/git-branch-strategy.md` | Git branch strategy | Branch strategy changes |
+| `docs/supported-tech-stacks.md` | Supported stack list | New stack added |
+| `docs/CHANGELOG.md` | Change history | All releases |
+| `docs/contributing.md` | This document | Development process changes |
 
-### 버전 업데이트
+### Version Updates
 
-새 버전 릴리스 시:
+When releasing new version:
 
-1. **CHANGELOG.md 업데이트**
+1. **Update CHANGELOG.md**
    ```markdown
    ## [0.0.3] - 2026-03-15
 
@@ -334,53 +334,53 @@ bash scripts/run-agent.sh qa --ticket PLAN-001
    - ...
    ```
 
-2. **문서 frontmatter 업데이트**
+2. **Update document frontmatter**
    ```markdown
-   **버전**: v0.0.3
-   **최종 업데이트**: 2026-03-15
+   **Version**: v0.0.3
+   **Last Updated**: 2026-03-15
    ```
 
-3. **README.md 버전 태그 업데이트**
+3. **Update README.md version tag**
 
 ---
 
-## 🚀 릴리스 프로세스
+## 🚀 Release Process
 
-### 버전 관리
+### Version Management
 
-**버전 체계**: Semantic Versioning (Major.Minor.Patch)
+**Version Scheme**: Semantic Versioning (Major.Minor.Patch)
 
-- **Major (1.0.0)**: 호환성 깨지는 변경
-- **Minor (0.1.0)**: 새 기능 추가 (호환 유지)
-- **Patch (0.0.1)**: 버그 수정
+- **Major (1.0.0)**: Breaking changes
+- **Minor (0.1.0)**: New features (backward compatible)
+- **Patch (0.0.1)**: Bug fixes
 
-**현재 버전**: `v0.0.2` (beta)
+**Current Version**: `v0.0.2` (beta)
 
-### 릴리스 절차
+### Release Procedure
 
 ```bash
-# 1. dev 브랜치에서 릴리스 준비
+# 1. Prepare release in dev branch
 git checkout dev
 git pull origin dev
 
-# 2. 버전 확인 및 문서 업데이트
+# 2. Check version and update documentation
 vim docs/CHANGELOG.md
 # [Unreleased] → [0.0.3]
 
 vim README.md
-# 버전 태그 업데이트
+# Update version tag
 
-# 3. 커밋
+# 3. Commit
 git add .
 git commit -m "chore: prepare release v0.0.3"
 
-# 4. main에 머지
+# 4. Merge to main
 git checkout main
 git merge dev
 git tag -a v0.0.3 -m "Release v0.0.3"
 git push origin main --tags
 
-# 5. dev 브랜치 동기화
+# 5. Sync dev branch
 git checkout dev
 git merge main
 git push origin dev
@@ -388,98 +388,98 @@ git push origin dev
 
 ---
 
-## 🔧 트러블슈팅
+## 🔧 Troubleshooting
 
-### 자주 발생하는 문제
+### Common Issues
 
-#### Q1. Rate Limit 초과
+#### Q1. Rate Limit Exceeded
 
 ```bash
-# rate-limit-check.sh 확인
+# Check rate-limit-check.sh
 bash scripts/rate-limit-check.sh
 
-# 사용량 파싱
+# Parse usage
 python3 scripts/parse_usage.py
 ```
 
-#### Q2. Git 브랜치 생성 실패
+#### Q2. Git Branch Creation Failed
 
 ```bash
-# 설정 확인
+# Check configuration
 bash scripts/git-branch-helper.sh config
 
-# 수동 브랜치 준비
+# Manually prepare branch
 bash scripts/git-branch-helper.sh prepare coding PLAN-001 user-auth
 ```
 
-#### Q3. 프로젝트 컨텍스트 인식 실패
+#### Q3. Project Context Recognition Failed
 
 ```bash
-# .project-config.json 확인
+# Check .project-config.json
 cat team/.project-config.json
 
-# current_project 설정 확인
+# Check current_project setting
 jq '.current_project' team/.project-config.json
 ```
 
 ---
 
-## 📞 커뮤니케이션
+## 📞 Communication
 
-### 이슈 제기
+### Raising Issues
 
-GitHub Issues 사용
+Use GitHub Issues
 
-**템플릿**:
+**Template**:
 ```markdown
-## 문제 설명
-무슨 문제인가?
+## Problem Description
+What is the problem?
 
-## 재현 방법
+## Reproduction Steps
 1. ...
 2. ...
 
-## 예상 동작
-무엇이 일어나야 하는가?
+## Expected Behavior
+What should happen?
 
-## 실제 동작
-무엇이 일어났는가?
+## Actual Behavior
+What happened?
 
-## 환경
+## Environment
 - OS: macOS/Linux/Windows
 - Shell: bash/zsh
-- Claude Code 버전: ...
+- Claude Code version: ...
 ```
 
 ### Pull Request
 
-**템플릿**:
+**Template**:
 ```markdown
-## 변경 내용
-무엇을 변경했는가?
+## Changes
+What was changed?
 
-## 목적
-왜 변경했는가?
+## Purpose
+Why was it changed?
 
-## 테스트
-어떻게 테스트했는가?
+## Testing
+How was it tested?
 
-## 체크리스트
-- [ ] 문서 업데이트
-- [ ] CHANGELOG.md 업데이트
-- [ ] 테스트 완료
+## Checklist
+- [ ] Documentation updated
+- [ ] CHANGELOG.md updated
+- [ ] Testing complete
 ```
 
 ---
 
-## 📖 참고 자료
+## 📖 References
 
-- [Architecture](./architecture.md): 시스템 구조
-- [Git Branch Strategy](./git-branch-strategy.md): 브랜치 전략
-- [Supported Tech Stacks](./supported-tech-stacks.md): 지원 스택
-- [CHANGELOG](./CHANGELOG.md): 변경 이력
+- [Architecture](./architecture.md): System structure
+- [Git Branch Strategy](./git-branch-strategy.md): Branch strategy
+- [Supported Tech Stacks](./supported-tech-stacks.md): Supported stacks
+- [CHANGELOG](./CHANGELOG.md): Change history
 
 ---
 
-**버전**: v0.0.2
-**최종 업데이트**: 2026-03-12
+**Version**: v0.0.2
+**Last Updated**: 2026-03-12

@@ -1,5 +1,5 @@
 #!/bin/bash
-# 에이전트 시스템 개발 로그 생성 스크립트
+# Agent system development log creation script
 
 set -e
 
@@ -11,9 +11,9 @@ TOPIC="$1"
 
 if [[ -z "$TOPIC" ]]; then
     echo ""
-    echo "사용법: bash scripts/create-dev-log.sh <주제>"
+    echo "Usage: bash scripts/create-dev-log.sh <topic>"
     echo ""
-    echo "예시:"
+    echo "Examples:"
     echo "  bash scripts/create-dev-log.sh git-branch-automation"
     echo "  bash scripts/create-dev-log.sh rate-limit-optimization"
     echo "  bash scripts/create-dev-log.sh new-agent-implementation"
@@ -24,104 +24,104 @@ fi
 DATE=$(date +%Y%m%d)
 FILENAME="$LOGS_DIR/${DATE}-${TOPIC}.md"
 
-# 로그 디렉토리가 없으면 생성
+# Create logs directory if it doesn't exist
 if [[ ! -d "$LOGS_DIR" ]]; then
     mkdir -p "$LOGS_DIR"
-    echo "📁 logs-agent_dev/ 디렉토리 생성됨"
+    echo "📁 logs-agent_dev/ directory created"
 fi
 
-# 파일이 이미 존재하면 경고
+# Warn if file already exists
 if [[ -f "$FILENAME" ]]; then
-    echo "⚠️  파일이 이미 존재합니다: $FILENAME"
-    echo "   덮어쓰시겠습니까? (y/N)"
+    echo "⚠️  File already exists: $FILENAME"
+    echo "   Overwrite? (y/N)"
     read -r CONFIRM
     if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
-        echo "❌ 취소되었습니다."
+        echo "❌ Cancelled."
         exit 0
     fi
 fi
 
-# 템플릿 생성
+# Create template
 cat > "$FILENAME" <<EOF
 # [${DATE}] ${TOPIC}
 
-## 개요
+## Overview
 
-{무엇을 개선했는지 2-3줄 요약}
+{2-3 line summary of what was improved}
 
-## 문제점
+## Problem
 
-{기존에 어떤 문제가 있었는지}
+{What problems existed previously}
 
-## 해결 방법
+## Solution
 
-### 1. {방법 1}
+### 1. {Method 1}
 
-{설명}
+{Description}
 
-### 2. {방법 2}
+### 2. {Method 2}
 
-{설명}
+{Description}
 
-## 변경된 파일
+## Changed Files
 
-### KR 버전
-- \`path/to/file1.md\` - {변경 내용}
-- \`path/to/file2.sh\` - {변경 내용}
+### KR Version
+- \`path/to/file1.md\` - {Changes}
+- \`path/to/file2.sh\` - {Changes}
 
-### ENG 버전
-- \`path/to/file1.md\` - {변경 내용}
+### ENG Version
+- \`path/to/file1.md\` - {Changes}
 
-## 새로 생성된 파일
+## Newly Created Files
 
-### KR 버전
-- \`path/to/new-file.json\` - {목적}
+### KR Version
+- \`path/to/new-file.json\` - {Purpose}
 
-### ENG 버전
-- \`path/to/new-file.json\` - {목적}
+### ENG Version
+- \`path/to/new-file.json\` - {Purpose}
 
-## 사용 예시
+## Usage Example
 
 \`\`\`bash
-# 예시 명령어
+# Example command
 \`\`\`
 
-## 동작 흐름
+## Workflow
 
 \`\`\`
-1. {단계 1}
+1. {Step 1}
    ↓
-2. {단계 2}
+2. {Step 2}
    ↓
-3. {단계 3}
+3. {Step 3}
 \`\`\`
 
-## 영향 범위
+## Impact Scope
 
-- [ ] KR 버전 (\`KR-multi-agent-coding-team/\`)
-- [ ] ENG 버전 (\`ENG-multi-agent-coding-team/\`)
-- [ ] 호환성: {기존 사용자에게 영향 여부}
+- [ ] KR version (\`KR-multi-agent-coding-team/\`)
+- [ ] ENG version (\`ENG-multi-agent-coding-team/\`)
+- [ ] Compatibility: {Impact on existing users}
 
-## 테스트 체크리스트
+## Test Checklist
 
-- [ ] {테스트 항목 1}
-- [ ] {테스트 항목 2}
-- [ ] {테스트 항목 3}
-- [ ] 실제 프로젝트에서 에이전트 실행 테스트 (사용자)
+- [ ] {Test item 1}
+- [ ] {Test item 2}
+- [ ] {Test item 3}
+- [ ] Test agent execution in actual project (user)
 
-## 관련 이슈/요청
+## Related Issues/Requests
 
-**사용자 요청:**
-> {요청 내용}
+**User Request:**
+> {Request content}
 
 **GitHub Issue:**
-- #{이슈 번호}
+- #{Issue number}
 
-## 참고 문서
+## Reference Documentation
 
-- \`path/to/doc.md\` - {설명}
+- \`path/to/doc.md\` - {Description}
 
-## 주요 설정 (있는 경우)
+## Key Configuration (if applicable)
 
 \`\`\`json
 {
@@ -129,30 +129,30 @@ cat > "$FILENAME" <<EOF
 }
 \`\`\`
 
-## 향후 개선 계획
+## Future Improvement Plan
 
-- [ ] {개선 항목 1}
-- [ ] {개선 항목 2}
+- [ ] {Improvement item 1}
+- [ ] {Improvement item 2}
 
-## 알려진 제한사항
+## Known Limitations
 
-1. **{제한사항 1}**: {설명}
-2. **{제한사항 2}**: {설명}
+1. **{Limitation 1}**: {Description}
+2. **{Limitation 2}**: {Description}
 
-## 노트
+## Notes
 
-- {추가 메모 1}
-- {추가 메모 2}
+- {Additional note 1}
+- {Additional note 2}
 EOF
 
 echo ""
-echo "✅ 개발 로그 템플릿 생성 완료!"
+echo "✅ Development log template created!"
 echo ""
-echo "📄 파일: $FILENAME"
+echo "📄 File: $FILENAME"
 echo ""
-echo "다음 단계:"
-echo "  1. 에디터에서 파일을 열어 내용을 작성하세요."
-echo "  2. 작성 완료 후 Git에 커밋하세요."
+echo "Next steps:"
+echo "  1. Open file in editor and write content."
+echo "  2. Commit to Git after writing."
 echo ""
 echo "  code \"$FILENAME\""
 echo ""
