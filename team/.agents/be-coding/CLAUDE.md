@@ -6,17 +6,46 @@ in compliance with `.rules/be-coding-rules.md`.
 
 ---
 
-## ⚡ Required Check Before Starting (Never Skip)
+## ⚡ Required Checks Before Starting (Never Skip)
+
+### 1. Rate Limit Check
 
 Run the command below and act according to the result:
 
-```
+```bash
 ! bash scripts/rate-limit-check.sh be-coding
 ```
 
 - **"✅ Available"** → Proceed with work
 - **"⚠️ Warning"** → Notify the user and proceed only with approval
 - **"🛑 Stop"** → Halt immediately, inform user when work can resume
+
+### 2. Git Branch Preparation
+
+Prepare a ticket-specific branch before starting work. (See `.config/git-workflow.json`)
+
+```bash
+! bash scripts/git-branch-helper.sh prepare be-coding {ticket-number} {slug}
+```
+
+**Example:**
+```bash
+bash scripts/git-branch-helper.sh prepare be-coding PLAN-001 user-auth
+# → Creates/switches to feature/be/PLAN-001-user-auth branch
+```
+
+**Actions:**
+- Creates new branch from configured base branch (default: `dev`)
+- If branch already exists, switches to it
+- Automatically stashes uncommitted changes if any
+
+**Skip Conditions:**
+- Can skip if `enabled: false` in `.config/git-workflow.json`
+- Skip if not a Git repository
+
+**If Branch Preparation Fails:**
+- Notify user and request manual branch switch
+- Or ask whether to proceed on current branch
 
 ---
 
@@ -25,9 +54,9 @@ Run the command below and act according to the result:
 Confirm the ticket number passed at startup. (e.g. PROJ-123)
 **Only read files whose filename starts with the given ticket number.**
 
-1. **API Documentation**: `be-api-requirements/{ticket-number}-*.md`
+1. **API Documentation**: `planning-materials/be-api-requirements/{ticket-number}-*.md`
 2. **Coding Rules**: `.rules/be-coding-rules.md` ← **The standard for all code generation**
-3. **Existing Code Structure** (if present): `be-project/` directory
+3. **Existing Code Structure** (if present): `applications/be-project/` directory
 
 If no files matching the ticket number exist, halt immediately and notify the user.
 
@@ -40,7 +69,7 @@ If no files matching the ticket number exist, halt immediately and notify the us
 Check for files matching the ticket number:
 
 ```bash
-ls be-api-requirements/{ticket-number}-* 2>/dev/null
+ls planning-materials/be-api-requirements/{ticket-number}-* 2>/dev/null
 ```
 
 - Files found → Proceed to Step 1
@@ -49,12 +78,12 @@ ls be-api-requirements/{ticket-number}-* 2>/dev/null
 ```
 ❌ No API documentation files found for {ticket-number}.
    Make sure PM Agent has been run first.
-   bash scripts/run-agent.sh pm --ticket-file ./tickets/{ticket-number}.md
+   bash scripts/run-agent.sh pm --ticket-file ./planning-materials/tickets/{ticket-number}.md
 ```
 
 ### Step 1. Parse API Documentation
 
-Read `be-api-requirements/{ticket-number}-*.md` and extract:
+Read `planning-materials/be-api-requirements/{ticket-number}-*.md` and extract:
 - Endpoint list (method, path, description)
 - Request body / Query params / Path params schemas
 - Response schemas (success / error)
@@ -116,7 +145,7 @@ Generate code in the order below, strictly following `.rules/be-coding-rules.md`
 
 ## 📝 Log Writing Rules (Never Skip)
 
-**File path**: `logs/be-coding/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
+**File path**: `applications/logs/be-coding/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
 
 Log template:
 
@@ -125,10 +154,10 @@ Log template:
     - **Agent**: BE Coding Agent
     - **Ticket Number**: {PROJ-123}
     - **Date**: {YYYY-MM-DD HH:mm:ss}
-    - **API Doc Reference**: be-api-requirements/{ticket-number}-{filename}.md
+    - **API Doc Reference**: planning-materials/be-api-requirements/{ticket-number}-{filename}.md
     - **Created/Modified Files**:
-      - be-project/src/schemas/...
-      - be-project/src/services/...
+      - applications/be-project/src/schemas/...
+      - applications/be-project/src/services/...
       - (List every file without omission)
 
     ---

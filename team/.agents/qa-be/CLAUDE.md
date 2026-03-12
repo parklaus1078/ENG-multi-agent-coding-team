@@ -23,10 +23,10 @@ that validates every requirement without omission.
 Confirm the ticket number passed at startup. (e.g. PROJ-123)
 **Only read files whose filename starts with the given ticket number.**
 
-1. **Test Cases**: `be-test-cases/{ticket-number}-*.md`
-2. **API Documentation**: `be-api-requirements/{ticket-number}-*.md`
-3. **Implemented Code**: `be-project/src/` directory
-4. **Existing Tests** (if present): `be-project/tests/`
+1. **Test Cases**: `planning-materials/be-test-cases/{ticket-number}-*.md`
+2. **API Documentation**: `planning-materials/be-api-requirements/{ticket-number}-*.md`
+3. **Implemented Code**: `applications/be-project/src/` directory
+4. **Existing Tests** (if present): `applications/be-project/tests/`
 
 If no files matching the ticket number exist, halt immediately and notify the user.
 
@@ -39,8 +39,8 @@ If no files matching the ticket number exist, halt immediately and notify the us
 Check for files matching the ticket number:
 
 ```bash
-ls be-test-cases/{ticket-number}-* 2>/dev/null
-ls be-api-requirements/{ticket-number}-* 2>/dev/null
+ls planning-materials/be-test-cases/{ticket-number}-* 2>/dev/null
+ls planning-materials/be-api-requirements/{ticket-number}-* 2>/dev/null
 ```
 
 - Files found → Proceed to Step 1
@@ -49,13 +49,13 @@ ls be-api-requirements/{ticket-number}-* 2>/dev/null
 ```
 ❌ No files found for {ticket-number}.
    Make sure PM Agent has been run first.
-   bash scripts/run-agent.sh pm --ticket-file ./tickets/{ticket-number}.md
+   bash scripts/run-agent.sh pm --ticket-file ./planning-materials/tickets/{ticket-number}.md
 ```
 
 ### Step 1. Parse Inputs
 
-- Extract test case list from `be-test-cases/{ticket-number}-*.md`
-- Extract Request/Response schemas for each endpoint from `be-api-requirements/{ticket-number}-*.md`
+- Extract test case list from `planning-materials/be-test-cases/{ticket-number}-*.md`
+- Extract Request/Response schemas for each endpoint from `planning-materials/be-api-requirements/{ticket-number}-*.md`
 - Review implemented code structure (confirm existing services, repositories, and exception classes)
 
 ### Step 2. Draft Test Plan
@@ -69,10 +69,10 @@ Present the plan below to the user and get approval:
 
 Generate files in the order below:
 
-1. `be-project/tests/conftest.py` — Shared fixtures (engine, DB session, AsyncClient)
-2. `be-project/tests/api/v1/{domain}/test_{domain}.py` — Endpoint integration tests
-3. `be-project/tests/repositories/test_{domain}_repository.py` — Repository DB I/O tests
-4. `be-project/tests/services/test_{domain}_service.py` — Service unit tests (Mock)
+1. `applications/be-project/tests/conftest.py` — Shared fixtures (engine, DB session, AsyncClient)
+2. `applications/be-project/tests/api/v1/{domain}/test_{domain}.py` — Endpoint integration tests
+3. `applications/be-project/tests/repositories/test_{domain}_repository.py` — Repository DB I/O tests
+4. `applications/be-project/tests/services/test_{domain}_service.py` — Service unit tests (Mock)
 
 ---
 
@@ -102,7 +102,7 @@ The rules below must be strictly followed. **All layers except integration tests
 
 ## 📝 Log Writing Rules (Never Skip)
 
-**File path**: `logs/qa-be/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
+**File path**: `applications/logs/qa-be/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
 
 Log template:
 
@@ -111,10 +111,10 @@ Log template:
     - **Agent**: QA-BE Agent
     - **Ticket Number**: {PROJ-123}
     - **Date**: {YYYY-MM-DD HH:mm:ss}
-    - **Test Case Reference**: be-test-cases/{ticket-number}-{filename}.md
-    - **API Doc Reference**: be-api-requirements/{ticket-number}-{filename}.md
+    - **Test Case Reference**: planning-materials/be-test-cases/{ticket-number}-{filename}.md
+    - **API Doc Reference**: planning-materials/be-api-requirements/{ticket-number}-{filename}.md
     - **Created/Modified Files**:
-      - be-project/tests/...
+      - applications/be-project/tests/...
 
     ---
 
@@ -156,3 +156,4 @@ Log template:
 - Do not use `TestClient` (synchronous) — always use `httpx.AsyncClient` + `ASGITransport`
 - Do not use `time.sleep()`
 - Do not pass undefined parameters to exception constructors
+- There is a bug on configuring scope management using pytest.ini when writing tests in pytest. Hence, manage the event loop of each test and fixture by correctly noting the scope/loop_scope of each.

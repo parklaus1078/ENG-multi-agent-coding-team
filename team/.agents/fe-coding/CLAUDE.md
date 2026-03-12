@@ -25,11 +25,11 @@ Read and understand all files and directories below **before starting any work**
 Confirm the ticket number passed at startup. (e.g. PROJ-123)
 **Only read files whose filename starts with the given ticket number.**
 
-1. **API Documentation**: `be-api-requirements/{ticket-number}-*.md`
-2. **UI Spec**: `fe-ui-requirements/{ticket-number}-*.md`
-3. **UI Wireframe**: `fe-ui-requirements/{ticket-number}-*.html`
+1. **API Documentation**: `planning-materials/be-api-requirements/{ticket-number}-*.md`
+2. **UI Spec**: `planning-materials/fe-ui-requirements/{ticket-number}-*.md`
+3. **UI Wireframe**: `planning-materials/fe-ui-requirements/{ticket-number}-*.html`
 4. **Coding Rules**: `.rules/fe-coding-rules.md` ← **The standard for all code generation**
-5. **Existing Code Structure**: `fe-project/src/`
+5. **Existing Code Structure**: `applications/fe-project/src/`
 
 If no files matching the ticket number exist, halt immediately and notify the user.
 
@@ -42,8 +42,8 @@ If no files matching the ticket number exist, halt immediately and notify the us
 Check for files matching the ticket number:
 
 ```bash
-ls be-api-requirements/{ticket-number}-* 2>/dev/null
-ls fe-ui-requirements/{ticket-number}-* 2>/dev/null
+ls planning-materials/be-api-requirements/{ticket-number}-* 2>/dev/null
+ls planning-materials/fe-ui-requirements/{ticket-number}-* 2>/dev/null
 ```
 
 - Files found → Proceed to Step 1
@@ -52,21 +52,21 @@ ls fe-ui-requirements/{ticket-number}-* 2>/dev/null
 ```
 ❌ No requirement files found for {ticket-number}.
    Make sure PM Agent has been run first.
-   bash scripts/run-agent.sh pm --ticket-file ./tickets/{ticket-number}.md
+   bash scripts/run-agent.sh pm --ticket-file ./planning-materials/tickets/{ticket-number}.md
 ```
 
 ### Step 1. Parse Requirements
 
-Extract the following from `.md` and `.html` files under `fe-ui-requirements/`:
+Extract the following from `.md` and `.html` files under `planning-materials/fe-ui-requirements/`:
 
 - List of screens (pages)
 - Component structure for each screen
 - User interactions (clicks, form submissions, etc.)
-- Connected API endpoints (mapped against `be-api-requirements/`)
+- Connected API endpoints (mapped against `planning-materials/be-api-requirements/`)
 
 ### Step 2. Extract API Types
 
-Extract the Request/Response schemas for each API from `be-api-requirements/`.
+Extract the Request/Response schemas for each API from `planning-materials/be-api-requirements/`.
 Follow the type definition pattern in `.rules/fe-coding-rules.md` section 4-3.
 
 ### Step 3. Draft Implementation Plan
@@ -120,7 +120,7 @@ Generate code in the order below, strictly following `.rules/fe-coding-rules.md`
 
 ## 📝 Log Writing Rules (Never Skip)
 
-**File path**: `logs/fe-coding/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
+**File path**: `applications/logs/fe-coding/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
 
 Log template:
 
@@ -129,10 +129,10 @@ Log template:
     - **Agent**: FE Coding Agent
     - **Ticket Number**: {PROJ-123}
     - **Date**: {YYYY-MM-DD HH:mm:ss}
-    - **UI Spec Reference**: fe-ui-requirements/{ticket-number}-{filename}.md
-    - **API Doc Reference**: be-api-requirements/{ticket-number}-{filename}.md
+    - **UI Spec Reference**: planning-materials/fe-ui-requirements/{ticket-number}-{filename}.md
+    - **API Doc Reference**: planning-materials/be-api-requirements/{ticket-number}-{filename}.md
     - **Created/Modified Files**:
-      - fe-project/src/...
+      - applications/fe-project/src/...
       - (List every file without omission)
 
     ---
