@@ -31,16 +31,37 @@ Natural language project description passed through `run-agent.sh --project` fla
 
 ---
 
+## 📂 Mandatory Checks Before Starting Work
+
+### Step 0. Check Current Project
+
+```bash
+cat .project-config.json
+```
+
+**Extract Information:**
+- `current_project`: Current active project name
+- `current_project_path`: Project path (e.g., `projects/my-cli-tool`)
+
+**If project config doesn't exist:**
+```
+❌ Cannot find .project-config.json file.
+   Initialize project first:
+   bash scripts/init-project-v2.sh --interactive
+```
+
+---
+
 ## 📤 Deliverables
 
-Generate one ticket file per feature in `planning-materials/tickets/` directory.
+Generate one ticket file per feature in `projects/{current_project}/planning/tickets/` directory.
 
 **Filename Format**: `PLAN-{3-digit number}-{feature-slug}.md`
 
-Numbers start from the next number after the largest existing `PLAN-*` file in `planning-materials/tickets/`:
+Numbers start from the next number after the largest existing `PLAN-*` file in `projects/{current_project}/planning/tickets/`:
 
 ```bash
-ls planning-materials/tickets/PLAN-* 2>/dev/null | sort
+ls projects/{current_project}/planning/tickets/PLAN-* 2>/dev/null | sort
 # PLAN-001, PLAN-002 exist → next starts from PLAN-003
 # No PLAN-* files → start from PLAN-001
 ```
@@ -48,7 +69,7 @@ ls planning-materials/tickets/PLAN-* 2>/dev/null | sort
 Example Deliverables (Todo Management App):
 
 ```
-planning-materials/tickets/
+projects/my-todo-app/planning/tickets/
 ├── PLAN-001-user-auth.md
 ├── PLAN-002-todo-crud.md
 └── PLAN-003-category.md
@@ -59,6 +80,18 @@ planning-materials/tickets/
 ## 🔨 Work Order (Phased Execution)
 
 ### 🎯 Phase 1: Establish and Save Plan
+
+#### Step 1-0. Check Current Project (Mandatory)
+
+```bash
+cat .project-config.json
+```
+
+**Extract Information:**
+- `current_project`: Current active project name
+- `current_project_path`: Project path
+
+**All subsequent paths are based on `projects/{current_project}/`.**
 
 #### Step 1-1. Understand Project
 
@@ -114,7 +147,7 @@ If user requests modifications (add/remove/merge features), revise and present a
 
 **Immediately after approval**, save the plan to a JSON file. This file is referenced when creating tickets in Phase 2.
 
-**File Location**: `planning-materials/tickets/.plan-{YYYYMMDD-HHmmss}.json`
+**File Location**: `projects/{current_project}/planning/tickets/.plan-{YYYYMMDD-HHmmss}.json`
 
 ```json
 {
@@ -145,7 +178,7 @@ If user requests modifications (add/remove/merge features), revise and present a
 After saving, output this message to the user:
 
 ```
-✅ Phase 1 Complete: Plan saved to planning-materials/tickets/.plan-{timestamp}.json
+✅ Phase 1 Complete: Plan saved to projects/{current_project}/planning/tickets/.plan-{timestamp}.json
 
 Proceed to next step?
 - Enter "yes" to automatically proceed to Phase 2 (Ticket File Generation).
@@ -158,10 +191,10 @@ Proceed to next step?
 
 #### Step 2-1. Read Plan File
 
-Find and read the most recent `.plan-*.json` file in `planning-materials/tickets/` directory.
+Find and read the most recent `.plan-*.json` file in `projects/{current_project}/planning/tickets/` directory.
 
 ```bash
-ls -t planning-materials/tickets/.plan-*.json | head -1
+ls -t projects/{current_project}/planning/tickets/.plan-*.json | head -1
 ```
 
 If file not found, output error message and halt:
@@ -178,14 +211,14 @@ If file not found, output error message and halt:
 
 For each batch generation:
 1. Generate only that batch's tickets
-2. Save progress to `planning-materials/tickets/.progress-{timestamp}.json`
+2. Save progress to `projects/{current_project}/planning/tickets/.progress-{timestamp}.json`
 3. Notify user of progress
 4. Confirm whether to proceed with next batch
 
 **Progress File Example:**
 ```json
 {
-  "plan_file": "planning-materials/tickets/.plan-20260309-103000.json",
+  "plan_file": "projects/{current_project}/planning/tickets/.plan-20260309-103000.json",
   "total_tickets": 12,
   "completed_tickets": 5,
   "current_batch": 1,
@@ -195,7 +228,7 @@ For each batch generation:
 
 #### Step 2-3. Generate Ticket Files
 
-After approval, generate files in `planning-materials/tickets/` using the template below.
+After approval, generate files in `projects/{current_project}/planning/tickets/` using the template below.
 
 ```markdown
 # {ticket number}: {feature name}
@@ -241,8 +274,8 @@ After each batch completes:
 ```
 ✅ Batch {N}/{total batches} Complete ({completed tickets}/{total tickets} tickets)
 Generated files:
-- planning-materials/tickets/PLAN-001-user-auth.md
-- planning-materials/tickets/PLAN-002-todo-crud.md
+- projects/{current_project}/planning/tickets/PLAN-001-user-auth.md
+- projects/{current_project}/planning/tickets/PLAN-002-todo-crud.md
 ...
 
 Proceed with next batch? (yes/no)
@@ -266,18 +299,19 @@ Proceed with next batch? (yes/no)
 
 ## 📝 Log Writing Rules (Never Skip)
 
-**File Location**: `applications/logs/project-planner/{YYYYMMDD-HHmmss}-{project-slug}.md`
+**File Location**: `projects/{current_project}/logs/project-planner/{YYYYMMDD-HHmmss}-{project-slug}.md`
 
 Log Template:
 
     # Project Planner Log: {project name}
 
     - **Agent**: Project Planner Agent
+    - **Project**: {current_project}
     - **Date**: {YYYY-MM-DD HH:mm:ss}
     - **User Input**: {verbatim}
     - **Generated Files**:
-      - planning-materials/tickets/PLAN-001-{slug}.md
-      - planning-materials/tickets/PLAN-002-{slug}.md
+      - projects/{current_project}/planning/tickets/PLAN-001-{slug}.md
+      - projects/{current_project}/planning/tickets/PLAN-002-{slug}.md
       - (List all files)
 
     ---
@@ -347,6 +381,8 @@ Adjust batch size based on project scale:
 ## 🚫 Prohibited Actions
 
 - Starting work without rate limit check
+- **Starting work without checking `.project-config.json`**
+- **Generating tickets in wrong project directory**
 - Starting ticket file generation without user approval
 - Completing work without writing log
 - **Skipping plan file save after Phase 1 completion** (makes resumption impossible)
@@ -356,15 +392,46 @@ Adjust batch size based on project scale:
 
 ---
 
+## 🆘 Error Handling
+
+### Project config file doesn't exist
+```
+❌ Cannot find .project-config.json.
+   Initialize project: bash scripts/init-project-v2.sh --interactive
+```
+
+### Project directory doesn't exist
+```
+❌ Cannot find projects/{current_project} directory.
+   Verify project initialization.
+```
+
+### planning/tickets directory doesn't exist
+```
+⚠️ projects/{current_project}/planning/tickets directory doesn't exist.
+   Creating automatically.
+```
+
+---
+
+**Version**: v0.0.2
+**Last Updated**: 2026-03-13
+
+---
+
 ## 📋 Work Checklist
 
-**Phase 1 (Establish Plan):**
+**Before Work:**
 - [ ] Rate limit check complete
+- [ ] `.project-config.json` read (current_project confirmed)
+- [ ] Project directory exists
+
+**Phase 1 (Establish Plan):**
 - [ ] Project requirements understood
 - [ ] Feature breakdown complete
 - [ ] Priorities and dependencies set
 - [ ] Plan presented to user and approved
-- [ ] `.plan-{timestamp}.json` file saved
+- [ ] `projects/{current_project}/planning/tickets/.plan-{timestamp}.json` file saved
 
 **Phase 2 (Generate Tickets):**
 - [ ] `.plan-*.json` file read

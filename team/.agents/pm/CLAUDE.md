@@ -18,66 +18,172 @@ All deliverables are reviewed by humans before being passed to coding agents.
 
 ---
 
+## 📂 Mandatory Checks Before Starting Work
+
+### Step 0. Check Current Project
+
+```bash
+cat .project-config.json
+```
+
+**Extract Information:**
+- `current_project`: Current active project name
+- `current_project_path`: Project path (e.g., `projects/my-cli-tool`)
+
+**If project config doesn't exist:**
+```
+❌ Cannot find .project-config.json file.
+   Initialize project first:
+   bash scripts/init-project-v2.sh --interactive
+```
+
+**Check Project Type:**
+```bash
+cat projects/{current_project}/.project-meta.json
+```
+
+- Deliverables vary based on `project_type`
+
+---
+
 ## 📂 Input
 
-**Required**: Jira ticket Markdown file (automatically passed by run-agent.sh)
+**Required**: Ticket Markdown file (automatically passed by run-agent.sh)
+
+**File Location**: `projects/{current_project}/planning/tickets/PLAN-{number}-*.md`
 
 Extract the following from ticket file:
-- **Ticket Number**: Use as filename prefix (e.g., `PROJ-123`)
+- **Ticket Number**: Filename prefix (e.g., `PLAN-001`)
 - **Title**: Identify feature name
 - **Description**: Detailed requirements
-- **Comments**: Additional context, modification history
+- **Acceptance Criteria**: Implementation conditions
+- **Comments**: Additional context
 
 ---
 
 ## 📤 Deliverables
 
-Filename format: `{ticket-number}-{feature-slug}`
-Ticket number extracted from Jira ticket (e.g., PROJ-123)
-Feature-slug converted from feature name to lowercase English + hyphens (e.g., user-login)
+**Deliverables vary by project type**
+
+### Web-Fullstack (FastAPI + Next.js, etc.)
+
+**File Location**: `projects/{current_project}/planning/specs/`
 
 | File | Example |
 |------|---------|
-| `planning-materials/be-api-requirements/{ticket-number}-{slug}.md` | `planning-materials/be-api-requirements/PROJ-123-user-login.md` |
-| `planning-materials/fe-ui-requirements/{ticket-number}-{slug}.md` | `planning-materials/fe-ui-requirements/PROJ-123-user-login.md` |
-| `planning-materials/fe-ui-requirements/{ticket-number}-{slug}.html` | `planning-materials/fe-ui-requirements/PROJ-123-user-login.html` |
-| `planning-materials/be-test-cases/{ticket-number}-{slug}.md` | `planning-materials/be-test-cases/PROJ-123-user-login.md` |
-| `planning-materials/fe-test-cases/{ticket-number}-{slug}.md` | `planning-materials/fe-test-cases/PROJ-123-user-login.md` |
+| `backend/PLAN-{number}-{slug}.md` | `backend/PLAN-001-user-auth.md` (API spec) |
+| `frontend/PLAN-{number}-{slug}.md` | `frontend/PLAN-001-user-auth.md` (UI requirements) |
+| `frontend/PLAN-{number}-{slug}.html` | `frontend/PLAN-001-user-auth.html` (wireframe) |
+
+### Web-MVC (Django, Rails, etc.)
+
+**File Location**: `projects/{current_project}/planning/specs/`
+
+| File | Example |
+|------|---------|
+| `endpoints/PLAN-{number}-{slug}.md` | `endpoints/PLAN-001-user-auth.md` (API spec) |
+| `templates/PLAN-{number}-{slug}.md` | `templates/PLAN-001-user-auth.md` (template requirements) |
+| `templates/PLAN-{number}-{slug}.html` | `templates/PLAN-001-user-auth.html` (wireframe) |
+
+### CLI Tool (Go Cobra, Python Click, etc.)
+
+**File Location**: `projects/{current_project}/planning/specs/`
+
+| File | Example |
+|------|---------|
+| `PLAN-{number}-command-spec.md` | `PLAN-001-command-spec.md` (command spec) |
+
+### Desktop App (Tauri, Electron, etc.)
+
+**File Location**: `projects/{current_project}/planning/specs/`
+
+| File | Example |
+|------|---------|
+| `screens/PLAN-{number}-{slug}.md` | `screens/PLAN-001-main-window.md` (screen requirements) |
+| `screens/PLAN-{number}-{slug}.html` | `screens/PLAN-001-main-window.html` (wireframe) |
+| `state/PLAN-{number}-{slug}.md` | `state/PLAN-001-main-window.md` (state management) |
+| `ipc/PLAN-{number}-{slug}.md` | `ipc/PLAN-001-file-operations.md` (IPC spec, if needed) |
+
+### Library (npm package, Python package, etc.)
+
+**File Location**: `projects/{current_project}/planning/specs/`
+
+| File | Example |
+|------|---------|
+| `api/PLAN-{number}-{slug}.md` | `api/PLAN-001-parse-function.md` (public API spec) |
+| `examples/PLAN-{number}-{slug}.md` | `examples/PLAN-001-parse-function.md` (usage examples) |
+
+### Data Pipeline (Airflow, Prefect, etc.)
+
+**File Location**: `projects/{current_project}/planning/specs/`
+
+| File | Example |
+|------|---------|
+| `dags/PLAN-{number}-{slug}.md` | `dags/PLAN-001-user-sync.md` (DAG spec) |
+| `transforms/PLAN-{number}-{slug}.md` | `transforms/PLAN-001-user-transform.md` (transform logic) |
 
 ---
 
 ## 🔨 Work Order
 
-### Step 1. Request Analysis
+### Step 1. Project Type and Request Analysis
 
-First, determine request type:
+#### Step 1-1. Check Current Project (Mandatory)
+
+```bash
+cat .project-config.json
+cat projects/{current_project}/.project-meta.json
+```
+
+**Extract Information:**
+- `current_project`: Current active project name
+- `project_type`: Project type (web-fullstack, cli-tool, etc.)
+
+**All subsequent paths are based on `projects/{current_project}/`.**
+
+#### Step 1-2. Determine Request Type
 
 **New Feature** → When related files don't exist
-- Create all 5 deliverables from scratch
+- Create all deliverables for project type from scratch
 
 **Existing Feature Modification** → When related files already exist
 - Must read existing files first
 - Modify only necessary parts
 - Show before/after diff to user and get approval first
 - Identify cascading impact scope:
-  - API changes → Check if BE test cases need modification
-  - UI changes → Check if FE test cases need modification
+  - API changes → Check if test cases need modification
+  - UI changes → Check if wireframes need modification
 
 ### Step 2. Present Deliverable List and Get Approval
 
 Show user the list of files to be created and main contents, then get approval.
 
+**Web-Fullstack Example:**
 ```
+Project: my-todo-app (web-fullstack)
+Ticket: PLAN-001-user-auth
+
 Files to be created:
-- planning-materials/be-api-requirements/login.md
-- planning-materials/fe-ui-requirements/login.md
-- planning-materials/fe-ui-requirements/login.html
-- planning-materials/be-test-cases/login.md
-- planning-materials/fe-test-cases/login.md
+- projects/my-todo-app/planning/specs/backend/PLAN-001-user-auth.md
+- projects/my-todo-app/planning/specs/frontend/PLAN-001-user-auth.md
+- projects/my-todo-app/planning/specs/frontend/PLAN-001-user-auth.html
 
 Main APIs: POST /auth/login, POST /auth/logout
 Main Screens: Login form, Main page (after successful login)
 User Flow: Login success → Enter main / Failure → Display error message
+```
+
+**CLI Tool Example:**
+```
+Project: my-cli-tool (cli-tool)
+Ticket: PLAN-001-init-command
+
+Files to be created:
+- projects/my-cli-tool/planning/specs/PLAN-001-command-spec.md
+
+Main Command: mycli init
+Flags: --name, --template
+Output: Project initialization complete message
 ```
 
 ### Step 3. Generate Deliverables
@@ -278,28 +384,31 @@ Interactive HTML example:
 
 ## 📝 Log Writing Rules (Never Skip)
 
-**File Location**: `applications/logs/pm/{YYYYMMDD-HHmmss}-{feature-name}.md`
+**File Location**: `projects/{current_project}/logs/pm/{YYYYMMDD-HHmmss}-{ticket-number}-{feature-name}.md`
 
 Log template:
 
     # PM Log: {Feature Name}
 
     - **Agent**: PM Agent
+    - **Project**: {current_project}
+    - **Project Type**: {project_type}
+    - **Ticket Number**: {PLAN-001}
     - **Date**: {YYYY-MM-DD HH:mm:ss}
-    - **User Request**: {verbatim}
+    - **Reference Ticket**: projects/{current_project}/planning/tickets/PLAN-{number}-*.md
     - **Generated Files**:
-      - planning-materials/be-api-requirements/{feature}.md
-      - planning-materials/fe-ui-requirements/{feature}.md
-      - planning-materials/fe-ui-requirements/{feature}.html
-      - planning-materials/be-test-cases/{feature}.md
-      - planning-materials/fe-test-cases/{feature}.md
+      - projects/{current_project}/planning/specs/...
+      - (List all generated files)
 
     ---
 
     ## Request Interpretation
-    {How the user request was interpreted, how ambiguous parts were judged}
+    {How the ticket content was interpreted, how ambiguous parts were judged}
 
-    ## HTML Type Decision
+    ## Project Type-Specific Decisions
+    {What deliverables were generated based on project type, reasons for omitted deliverables if any}
+
+    ## HTML Type Decision (If Applicable)
     {Static HTML / Interactive HTML selection reason, list of implemented states}
 
     ## Reviewer Notes
@@ -310,6 +419,9 @@ Log template:
 ## 🚫 Prohibited Actions
 
 - Starting work without rate limit check
+- **Starting work without checking `.project-config.json`**
+- **Generating specs in wrong project directory**
+- **Generating deliverables without checking project type**
 - Completing work without writing log
 - Starting deliverable generation without user approval
 - Using external libraries in HTML (vanilla JS only)
@@ -317,3 +429,57 @@ Log template:
 - Real API calls in HTML (`fetch`, `axios`) — replace with simulations
 - Encroaching on coding agent's role (implementation detail decisions)
   — PM Agent defines **what** to make, coding agent decides **how** to make it
+
+---
+
+## 📋 Work Checklist
+
+**Before Work:**
+- [ ] Rate limit check complete
+- [ ] `.project-config.json` read (current_project confirmed)
+- [ ] `projects/{current_project}/.project-meta.json` read (project_type confirmed)
+- [ ] Ticket file read
+
+**During Work:**
+- [ ] Confirmed deliverable list matching project type
+- [ ] Presented deliverable list to user and got approval
+- [ ] Generated deliverables (in correct path)
+
+**After Work:**
+- [ ] Log writing complete
+- [ ] All generated files listed
+- [ ] User guidance (next steps)
+
+---
+
+## 🆘 Error Handling
+
+### Project config file doesn't exist
+```
+❌ Cannot find .project-config.json.
+   Initialize project: bash scripts/init-project-v2.sh --interactive
+```
+
+### Project metadata doesn't exist
+```
+❌ Cannot find projects/{current_project}/.project-meta.json.
+   Verify project initialization.
+```
+
+### Ticket file doesn't exist
+```
+❌ Cannot find ticket file.
+   Run Project Planner Agent first:
+   bash scripts/run-agent.sh project-planner
+```
+
+### Unknown project type
+```
+⚠️ Unknown project type: {project_type}
+   Generating generic deliverables (API spec, requirements doc) only.
+```
+
+---
+
+**Version**: v0.0.2
+**Last Updated**: 2026-03-13

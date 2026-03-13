@@ -472,5 +472,5 @@ Log Template:
 
 ---
 
-**Version**: v2.0.0
+**Version**: v0.0.2
 **Last Updated**: 2026-03-12
