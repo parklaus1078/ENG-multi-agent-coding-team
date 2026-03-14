@@ -1,5 +1,5 @@
 #!/bin/bash
-# Agent implementation log viewer script v2.0
+# Agent implementation log viewer script v0.0.2
 # Usage:
 #   bash scripts/show-logs.sh              # All logs for current project
 #   bash scripts/show-logs.sh coding       # Specific agent only
@@ -12,7 +12,7 @@ FILTER="${1:-}"
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo " Agent Implementation Logs (v2.0)"
+echo " Agent Implementation Logs (v0.0.2)"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # ── All projects mode ───────────────────────────────────────
@@ -99,7 +99,7 @@ if [[ ! -d "$LOGS_DIR" ]]; then
     exit 0
 fi
 
-# v2.0 agent list
+# v0.0.2 agent list
 AGENTS=("stack-initializer" "project-planner" "pm" "coding" "qa")
 
 for agent in "${AGENTS[@]}"; do

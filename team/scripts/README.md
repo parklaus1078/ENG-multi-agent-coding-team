@@ -75,7 +75,7 @@ bash scripts/run-agent.sh qa --ticket PLAN-001
 ### Logs & Monitoring
 
 #### `show-logs.sh`
-View agent logs (v2.0).
+View agent logs (v0.0.2).
 
 ```bash
 # All logs for the current project
@@ -130,9 +130,9 @@ bash scripts/create-dev-log.sh git-workflow-automation
 ---
 
 
-## 📊 Differences Between v1.0 and v2.0
+## 📊 Differences Between v0.0.1 and v0.0.2
 
-| Script            | v1.0                                      | v2.0                         | Change                          |
+| Script            | v0.0.1                                    | v0.0.2                       | Change                          |
 |-------------------|-------------------------------------------|------------------------------|---------------------------------|
 | `init-project.sh` | Creates `applications/`, `planning-materials/` | Creates `projects/{name}/` | Project isolation, type-based dynamic structure |
 

@@ -355,5 +355,5 @@ Closes #123
 
 ---
 
-**Version**: v1.0.0
+**Version**: v0.0.1
 **Last Updated**: 2026-03-12

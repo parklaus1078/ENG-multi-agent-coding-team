@@ -75,12 +75,12 @@ Ticket number received from user (e.g., PLAN-001)
 
 | Project Type | Test Case Path |
 |--------------|----------------|
-| **web-fullstack** | `test-cases/backend/PLAN-{number}-*.md`<br>`test-cases/frontend/PLAN-{number}-*.md` |
-| **web-mvc** | `test-cases/PLAN-{number}-*.md` |
-| **cli-tool** | `test-cases/PLAN-{number}-*.md` |
-| **desktop-app** | `test-cases/unit/PLAN-{number}-*.md`<br>`test-cases/integration/PLAN-{number}-*.md`<br>`test-cases/e2e/PLAN-{number}-*.md` |
-| **library** | `test-cases/PLAN-{number}-*.md` |
-| **data-pipeline** | `test-cases/PLAN-{number}-*.md` |
+| **web-fullstack** | `specs/test-cases/PLAN-{number}-backend.md`<br>`specs/test-cases/PLAN-{number}-frontend.md` |
+| **web-mvc** | `specs/test-cases/PLAN-{number}-backend.md`<br>`specs/test-cases/PLAN-{number}-frontend.md` |
+| **cli-tool** | `specs/test-cases/PLAN-{number}-command.md` |
+| **desktop-app** | `specs/test-cases/PLAN-{number}-unit.md`<br>`specs/test-cases/PLAN-{number}-integration.md`<br>`specs/test-cases/PLAN-{number}-e2e.md` |
+| **library** | `specs/test-cases/PLAN-{number}-api.md`<br>`specs/test-cases/PLAN-{number}-examples.md` |
+| **data-pipeline** | `specs/test-cases/PLAN-{number}-dag.md`<br>`specs/test-cases/PLAN-{number}-transform.md` |
 
 **If File Not Found:**
 ```

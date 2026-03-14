@@ -388,4 +388,4 @@ Documents to write for each tech stack:
 ---
 
 **Written**: 2026-03-12
-**Version**: v1.0.0-draft
+**Version**: v0.0.1-draft
