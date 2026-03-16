@@ -31,6 +31,7 @@ case "${1:-}" in
         AGENT_NAME="${2:-}"
         TICKET_NUM="${3:-}"
         SLUG="${4:-}"
+        PROJECT_PATH="${5:-}"
 
         if [[ "$ENABLED" != "true" ]]; then
             echo "ℹ️  Git branch auto-management is disabled."
@@ -38,8 +39,18 @@ case "${1:-}" in
         fi
 
         if [[ -z "$AGENT_NAME" || -z "$TICKET_NUM" ]]; then
-            echo "❌ Usage: bash scripts/git-branch-helper.sh prepare <agent-name> <ticket-number> [slug]"
+            echo "❌ Usage: bash scripts/git-branch-helper.sh prepare <agent-name> <ticket-number> [slug] [project-path]"
             exit 1
+        fi
+
+        # Change to project directory if provided
+        if [[ -n "$PROJECT_PATH" ]]; then
+            if [[ ! -d "$PROJECT_PATH" ]]; then
+                echo "❌ Project directory not found: $PROJECT_PATH"
+                exit 1
+            fi
+            echo "📂 Changing to project directory: $PROJECT_PATH"
+            cd "$PROJECT_PATH" || exit 1
         fi
 
         # Determine prefix by agent and set base branch
@@ -187,7 +198,7 @@ case "${1:-}" in
         echo "Git Branch Management Helper Script"
         echo ""
         echo "Usage:"
-        echo "  bash scripts/git-branch-helper.sh prepare <agent-name> <ticket-number> [slug]"
+        echo "  bash scripts/git-branch-helper.sh prepare <agent-name> <ticket-number> [slug] [project-path]"
         echo "    → Prepare branch before work (create or switch)"
         echo ""
         echo "  bash scripts/git-branch-helper.sh status"
@@ -197,11 +208,11 @@ case "${1:-}" in
         echo "    → View current configuration"
         echo ""
         echo "Examples:"
-        echo "  bash scripts/git-branch-helper.sh prepare coding PLAN-001 user-auth"
-        echo "  → Create/switch to feature/PLAN-001-user-auth branch"
+        echo "  bash scripts/git-branch-helper.sh prepare coding PLAN-001 user-auth /path/to/project"
+        echo "  → Create/switch to feature/PLAN-001-user-auth in /path/to/project"
         echo ""
         echo "  bash scripts/git-branch-helper.sh prepare qa PLAN-001"
-        echo "  → Create/switch to test/PLAN-001 branch"
+        echo "  → Create/switch to test/PLAN-001 in current directory"
         echo ""
         exit 1
         ;;

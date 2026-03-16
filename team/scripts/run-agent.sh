@@ -186,21 +186,23 @@ case "$AGENT_NAME" in
             exit 1
         fi
 
-        # Auto-create Git branch (extract slug from ticket file)
+        # Auto-create Git branch (extract slug from ticket file if exists, otherwise use ticket number only)
         TICKET_FILE_PATTERN="$PROJECT_PATH/planning/tickets/${TICKET_NUM}-*.md"
         TICKET_FILE_FOUND=$(ls $TICKET_FILE_PATTERN 2>/dev/null | head -1)
+        SLUG=""
 
         if [[ -n "$TICKET_FILE_FOUND" ]]; then
             # Extract slug from filename (PLAN-001-user-auth.md → user-auth)
             FILENAME=$(basename "$TICKET_FILE_FOUND")
             SLUG=$(echo "$FILENAME" | sed "s/${TICKET_NUM}-//" | sed 's/\.md$//')
+        fi
 
-            echo "🌿 Auto-creating Git branch..."
-            if bash "$SCRIPT_DIR/git-branch-helper.sh" prepare "$AGENT_NAME" "$TICKET_NUM" "$SLUG" 2>/dev/null; then
-                echo "✅ Branch ready"
-            else
-                echo "⚠️  Branch creation failed (check Git settings, work continues)"
-            fi
+        # Attempt branch creation with or without slug
+        echo ""
+        if bash "$SCRIPT_DIR/git-branch-helper.sh" prepare "$AGENT_NAME" "$TICKET_NUM" "$SLUG" "$PROJECT_PATH"; then
+            echo ""
+        else
+            echo "⚠️  Branch creation failed (work continues)"
             echo ""
         fi
 

@@ -20,7 +20,39 @@ and generate code that matches the project's architecture and stack.
 - **"⚠️ Warning"** → Notify user, proceed with consent
 - **"🛑 Stop"** → Stop immediately, show resume time and wait
 
-**Note:** Git branches are automatically created by `run-agent.sh`.
+### 2. Create Git Branch (Mandatory)
+
+**You must create and checkout a new branch before starting work.**
+
+```bash
+# Create branch based on ticket number
+git checkout -b feature/PLAN-{ticket-number}-{feature-slug}
+```
+
+**Branch Naming Rules:**
+- `feature/PLAN-{number}-{slug}` (e.g., `feature/PLAN-001-user-auth`)
+- Extract slug from ticket filename
+- All lowercase, separated by hyphens
+
+**Example:**
+```bash
+# For PLAN-001-user-auth.md ticket
+git checkout -b feature/PLAN-001-user-auth
+
+# Verify branch
+git branch
+```
+
+**If branch already exists:**
+```bash
+# Checkout existing branch
+git checkout feature/PLAN-001-user-auth
+
+# Check current state
+git status
+```
+
+**⚠️ Important:** Do not work directly on main/dev branch without creating a feature branch!
 
 ---
 
@@ -308,7 +340,7 @@ Log template:
 
 **Before Work:**
 - [ ] Rate limit check complete
-- [ ] Git branch ready
+- [ ] **Git branch created and checked out** (feature/PLAN-{number}-{slug})
 - [ ] Read `.project-config.json`
 - [ ] Read `projects/{current_project}/.project-meta.json`
 - [ ] Read ticket file
