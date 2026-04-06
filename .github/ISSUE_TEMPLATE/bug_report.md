@@ -1,12 +1,12 @@
 ---
-name: Bug Report
-about: When something doesn't work as expected
+name: bug report
+about: yes상과 다르게 action하는 경우
 title: "[Bug] "
 labels: bug
 assignees: ""
 ---
 
-## Which agent is affected?
+## 어떤 agent에 영향이 있나요?
 
 - [ ] `project-planner`
 - [ ] `pm`
@@ -14,11 +14,11 @@ assignees: ""
 - [ ] `qa`
 - [ ] `scripts/run-agent.sh`
 - [ ] `scripts/rate-limit-check.sh`
-- [ ] Other: 
+- [ ] other: 
 
 ---
 
-## Steps to Reproduce
+## 재현 stage
 
 1. 
 2. 
@@ -26,23 +26,23 @@ assignees: ""
 
 ---
 
-## Expected Behavior
+## yes상 action
 
-What did you expect to happen?
-
----
-
-## Actual Behavior
-
-What actually happened? If there's error output, paste it below.
-
-```
-(Paste error output here)
-```
+어떻게 action할 것으로 yes상했나요?
 
 ---
 
-## Environment
+## 실제 action
+
+실제로 어떻게 되었나요? error output이 있다면 down에 붙여넣어 주세요.
+
+```
+(에러 출력을 여기에 붙여넣으세요)
+```
+
+---
+
+## 환경
 
 - Claude Code version (`claude --version`): 
 - OS: 
@@ -50,6 +50,6 @@ What actually happened? If there's error output, paste it below.
 
 ---
 
-## Additional Context
+## add 맥락
 
-Any other helpful information (screenshots, related issues, etc.)
+help이 될 만한 다른 info (스크린샷, 관련 issue 등)

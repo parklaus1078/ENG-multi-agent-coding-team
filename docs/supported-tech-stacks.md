@@ -1,92 +1,92 @@
-# Supported Tech Stacks
+# support 기술 스택 list
 
-> Languages and frameworks supported by the multi-agent system, organized by project type
+> 멀티 agent system이 support할 project type별 언어 and framework list
 
 ---
 
-## 1. Web-Fullstack (FE + BE Separated)
+## 1. Web-Fullstack (FE + BE 분리)
 
 ### Backend
 
 #### Python
-- **FastAPI** ⭐ (Currently Supported)
-  - Async, type hints, automatic documentation
-  - Use cases: RESTful API, microservices
+- **FastAPI** ⭐ (currently support 중)
+  - async, type 힌트, auto documentation
+  - 사용 사례: RESTful API, 마이크로서비스
 - **Flask**
-  - Lightweight, flexible
-  - Use cases: Small APIs, prototypes
+  - 경량, 유연성
+  - 사용 사례: 소규모 API, 프로토type
 - **Django REST Framework (DRF)**
-  - Django-based REST API
-  - Use cases: Enterprise APIs, when Admin needed
+  - Django 기반 REST API
+  - 사용 사례: 기업용 API, Admin required 시
 
 #### Node.js
 - **Express.js**
-  - Minimal, rich ecosystem
-  - Use cases: RESTful API, real-time servers
+  - 미니멀, 생태계 풍부
+  - 사용 사례: RESTful API, 실time 서버
 - **NestJS**
-  - TypeScript, Angular-style architecture
-  - Use cases: Enterprise-grade backends
+  - TypeScript, Angular style 아키텍처
+  - 사용 사례: 엔터프라이즈급 backend
 - **Fastify**
-  - High performance, plugin architecture
-  - Use cases: High-traffic APIs
+  - 고performance, 플러그인 아키텍처
+  - 사용 사례: 고트래픽 API
 
 #### Go
 - **Gin**
-  - High-performance HTTP framework
-  - Use cases: Microservices, API gateways
+  - 고performance HTTP framework
+  - 사용 사례: 마이크로서비스, API 게이트웨이
 - **Echo**
-  - Middleware-centric, fast
-  - Use cases: RESTful APIs
+  - 미들웨어 중심, 빠름
+  - 사용 사례: RESTful API
 - **Fiber**
-  - Express-style, zero memory allocation
-  - Use cases: High-performance APIs
+  - Express style, 제로 메모리 할당
+  - 사용 사례: 고performance API
 
 #### Rust
 - **Axum**
-  - Tokio-based, type safety
-  - Use cases: High-performance APIs, systems programming
+  - Tokio 기반, type Plan전성
+  - 사용 사례: 고performance API, system 프로그래밍
 - **Actix-web**
-  - Actor model, very fast
-  - Use cases: Real-time services, high-traffic APIs
+  - Actor model, 매우 빠름
+  - 사용 사례: 실time 서비스, 고트래픽 API
 
 #### Java
 - **Spring Boot (Webflux)**
-  - Async reactive programming
-  - Use cases: Enterprise microservices
+  - async 리액티브 프로그래밍
+  - 사용 사례: 엔터프라이즈 마이크로서비스
 
 ### Frontend
 
-#### React Ecosystem
-- **Next.js** ⭐ (Currently Supported)
-  - SSR, SSG, file-based routing
-  - Use cases: SEO-critical web apps, large projects
+#### React 생태계
+- **Next.js** ⭐ (currently support 중)
+  - SSR, SSG, file 기반 라우팅
+  - 사용 사례: SEO important web앱, 대규모 project
 - **Vite + React**
-  - Fast HMR, lightweight
-  - Use cases: SPAs, dashboards
+  - 빠른 HMR, 경량
+  - 사용 사례: SPA, dashboard
 - **Remix**
-  - Nested routing, native forms
-  - Use cases: Data-centric web apps
+  - 중첩 라우팅, 네이티브 폼
+  - 사용 사례: data 중심 web앱
 
-#### Vue Ecosystem
+#### Vue 생태계
 - **Nuxt.js**
-  - SSR, file-based routing
-  - Use cases: Vue-preferring teams, when SEO needed
+  - SSR, file 기반 라우팅
+  - 사용 사례: Vue 선호 팀, SEO required 시
 - **Vite + Vue 3**
   - Composition API, TypeScript
-  - Use cases: SPAs, admin dashboards
+  - 사용 사례: SPA, administrator dashboard
 
-#### Svelte Ecosystem
+#### Svelte 생태계
 - **SvelteKit**
-  - Compile-time framework, lightweight
-  - Use cases: When high performance needed, small bundle size
+  - 컴file 타임 framework, 경량
+  - 사용 사례: 고performance required 시, 작은 번들 size
 
-#### Other
+#### other
 - **Angular**
-  - TypeScript native, complete framework
-  - Use cases: Enterprise large-scale projects
+  - TypeScript 네이티브, 완전한 framework
+  - 사용 사례: 엔터프라이즈 대규모 project
 - **Solid.js**
-  - Fine-grained reactivity, React-style syntax
-  - Use cases: High-performance interactive UIs
+  - 세밀한 반응성, React style 문법
+  - 사용 사례: 고performance 인터랙티브 UI
 
 ---
 
@@ -94,33 +94,33 @@
 
 ### Python
 - **Django** ⭐
-  - ORM, Admin, built-in template engine
-  - Use cases: Content management, traditional web apps
-  - Templates: Django Template Language (DTL)
+  - ORM, Admin, template 엔진 내장
+  - 사용 사례: 콘텐츠 관리, 전통적 web앱
+  - template: Django Template Language (DTL)
 
 ### Ruby
 - **Ruby on Rails**
   - Convention over Configuration
-  - Use cases: Startup MVPs, CRUD web apps
-  - Templates: ERB
+  - 사용 사례: 스타트업 MVP, CRUD web앱
+  - template: ERB
 
 ### Java
 - **Spring Boot (MVC)**
   - Thymeleaf, JSP
-  - Use cases: Enterprise web applications
-  - Templates: Thymeleaf, JSP
+  - 사용 사례: 엔터프라이즈 web 애플리케이션
+  - template: Thymeleaf, JSP
 
 ### PHP
 - **Laravel**
-  - Eloquent ORM, Blade templates
-  - Use cases: CMS, traditional web apps
-  - Templates: Blade
+  - Eloquent ORM, Blade template
+  - 사용 사례: CMS, 전통적 web앱
+  - template: Blade
 
 ### C#
 - **.NET (ASP.NET Core MVC)**
   - Razor Pages, Entity Framework
-  - Use cases: Enterprise web apps, Windows environments
-  - Templates: Razor
+  - 사용 사례: 엔터프라이즈 web앱, Windows 환경
+  - template: Razor
 
 ---
 
@@ -128,43 +128,43 @@
 
 ### Python
 - **Click** ⭐
-  - Decorator-based, simple syntax
-  - Use cases: General-purpose CLI tools
+  - 데코레이터 기반, 간단한 구문
+  - 사용 사례: 범용 CLI 도구
 - **Typer**
-  - Type hint-based, Click-based
-  - Use cases: Modern Python CLIs
+  - type 힌트 기반, Click 기반
+  - 사용 사례: 현대적 Python CLI
 - **argparse**
-  - Standard library
-  - Use cases: CLI without additional dependencies
+  - standard library
+  - 사용 사례: add 의존성 없는 CLI
 
 ### Go
 - **Cobra** ⭐
-  - Used by kubectl, docker CLI
-  - Use cases: Complex subcommand structures
+  - kubectl, docker CLI에서 사용
+  - 사용 사례: 복잡한 서브커맨드 Structure
 - **urfave/cli**
-  - Simple API
-  - Use cases: Small to medium CLIs
+  - 간단한 API
+  - 사용 사례: 중소규모 CLI
 
 ### Rust
 - **clap** ⭐
-  - Derive macros, excellent performance
-  - Use cases: High-performance CLIs, system tools
-- **structopt** (merged into clap v3)
-  - Struct-based argument parsing
-  - Use cases: Type-safe CLIs
+  - 파생 매크로, performance 우수
+  - 사용 사례: 고performance CLI, system 도구
+- **structopt** (clap v3로 통합)
+  - Structure체 기반 argument 파싱
+  - 사용 사례: type Plan전 CLI
 
 ### Node.js
 - **Commander.js**
-  - Express-style API
-  - Use cases: Node ecosystem CLIs
+  - Express style API
+  - 사용 사례: Node 생태계 CLI
 - **yargs**
-  - Complex argument parsing
-  - Use cases: Various option support
+  - 복잡한 argument 파싱
+  - 사용 사례: 다양한 option support
 
 ### Java
 - **picocli**
-  - Annotation-based
-  - Use cases: Enterprise CLI tools
+  - 어노테이션 기반
+  - 사용 사례: 엔터프라이즈 CLI 도구
 
 ---
 
@@ -174,54 +174,54 @@
 
 #### Electron (JavaScript/TypeScript)
 - **Electron + React** ⭐
-  - Use cases: VS Code, Slack, Discord
-  - Pros: Web tech utilization, rich ecosystem
-  - Cons: Heavy bundle size
+  - 사용 사례: VS Code, Slack, Discord
+  - 장점: web 기술 활용, 풍부한 생태계
+  - 단점: 무거운 번들 size
 - **Electron + Vue**
-  - Use cases: Vue-preferring teams
+  - 사용 사례: Vue 선호 팀
 - **Electron + Svelte**
-  - Use cases: Lightweight desktop apps
+  - 사용 사례: 경량 desktop 앱
 
 #### Tauri (Rust + Web)
 - **Tauri + React/Vue/Svelte** ⭐
-  - Use cases: Lightweight desktop apps (Electron alternative)
-  - Pros: Small bundle size (3-5MB), fast
-  - Cons: Requires Rust compilation environment
+  - 사용 사례: 경량 desktop 앱 (Electron 대Plan)
+  - 장점: 작은 번들 size (3-5MB), 빠름
+  - 단점: Rust 컴file 환경 required
 
 #### Flutter (Dart)
 - **Flutter Desktop**
-  - Use cases: Cross-platform (mobile + desktop)
-  - Pros: Native performance, consistent UI
-  - Cons: Relatively small desktop ecosystem
+  - 사용 사례: 크로스 플랫폼 (mobile + desktop)
+  - 장점: 네이티브 performance, 일관된 UI
+  - 단점: 상대적으로 작은 desktop 생태계
 
 #### Qt
 - **Qt (C++/Python)** ⭐
   - PyQt, PySide6
-  - Use cases: Professional tools (Autodesk, some Adobe tools)
-  - Pros: True native UI, performance
-  - Cons: Learning curve
+  - 사용 사례: professional 도구 (Autodesk, Adobe partial 툴)
+  - 장점: 진정한 네이티브 UI, performance
+  - 단점: learning 곡선
 
 ### Platform-Specific
 
 #### macOS
 - **SwiftUI** ⭐
-  - Swift native
-  - Use cases: macOS-only apps
-  - Pros: Best macOS integration
+  - Swift 네이티브
+  - 사용 사례: macOS 전용 앱
+  - 장점: 최고의 macOS 통합
 - **AppKit (Objective-C/Swift)**
-  - Legacy macOS apps
-  - Use cases: Complex macOS-specific features
+  - 레거시 macOS 앱
+  - 사용 사례: 복잡한 macOS 전용 feature
 
 #### Windows
 - **WPF (C#/.NET)** ⭐
-  - XAML-based
-  - Use cases: Windows enterprise apps
+  - XAML 기반
+  - 사용 사례: Windows 엔터프라이즈 앱
 - **WinUI 3 (C#/.NET)**
-  - Modern Windows UI
-  - Use cases: Windows 11 native apps
+  - 현대적 Windows UI
+  - 사용 사례: Windows 11 네이티브 앱
 - **Windows Forms (C#/.NET)**
-  - Legacy, rapid prototyping
-  - Use cases: Internal tools
+  - 레거시, 빠른 프로토타이핑
+  - 사용 사례: 내부 도구
 
 ---
 
@@ -230,20 +230,20 @@
 ### Cross-Platform
 - **React Native**
   - JavaScript/TypeScript
-  - Use cases: iOS + Android simultaneous development
+  - 사용 사례: iOS + Android concurrent development
 - **Flutter**
   - Dart
-  - Use cases: When native performance needed
-- **Expo (React Native-based)**
-  - Use cases: Rapid prototyping
+  - 사용 사례: 네이티브 performance required 시
+- **Expo (React Native 기반)**
+  - 사용 사례: 빠른 프로토타이핑
 
 ### Native
 - **SwiftUI (iOS)**
   - Swift
-  - Use cases: iOS-only apps
+  - 사용 사례: iOS 전용 앱
 - **Jetpack Compose (Android)**
   - Kotlin
-  - Use cases: Android-only apps
+  - 사용 사례: Android 전용 앱
 
 ---
 
@@ -251,27 +251,27 @@
 
 ### JavaScript/TypeScript
 - **npm package**
-  - Bundlers: Rollup, tsup, Vite
-  - Use cases: React component libraries, utilities
+  - 번들러: Rollup, tsup, Vite
+  - 사용 사례: React 컴포넌트 library, 유틸리티
 
 ### Python
 - **pip package**
-  - Build tools: setuptools, poetry, hatch
-  - Use cases: Data analysis libraries, API clients
+  - 빌드 도구: setuptools, poetry, hatch
+  - 사용 사례: data analytics library, API 클라이언트
 
 ### Rust
 - **crates.io**
   - Cargo
-  - Use cases: System libraries, WASM modules
+  - 사용 사례: system library, WASM module
 
 ### Go
 - **Go module**
   - go mod
-  - Use cases: CLI libraries, network utilities
+  - 사용 사례: CLI library, 네트워크 유틸리티
 
 ### Java
 - **Maven/Gradle package**
-  - Use cases: Enterprise utilities, Android libraries
+  - 사용 사례: 엔터프라이즈 유틸리티, Android library
 
 ---
 
@@ -279,57 +279,57 @@
 
 ### Python
 - **Apache Airflow** ⭐
-  - DAG-based workflow
-  - Use cases: Data pipeline orchestration
+  - DAG 기반 워크플로우
+  - 사용 사례: data pipeline 오케스트레이션
 - **Prefect**
-  - Modern workflow engine
-  - Use cases: Data engineering
+  - 현대적 워크플로우 엔진
+  - 사용 사례: data 엔지니어링
 - **Luigi**
-  - Developed by Spotify
-  - Use cases: Batch job pipelines
+  - Spotify development
+  - 사용 사례: 배치 task pipeline
 
 ### Scala
 - **Apache Spark**
-  - Large-scale data processing
-  - Use cases: Big data analytics
+  - 대규모 data process
+  - 사용 사례: 빅data analytics
 
 ### SQL-based
 - **dbt (Data Build Tool)**
-  - SQL-based transformations
-  - Use cases: Data warehouse modeling
+  - SQL 기반 변환
+  - 사용 사례: data 웨어하우스 model링
 
 ---
 
-## 8. Other
+## 8. other
 
 ### Game Development
 - **Unity (C#)**
-  - Cross-platform games
+  - 크로스 플랫폼 게임
 - **Unreal Engine (C++)**
-  - AAA games
+  - AAA 게임
 
 ### WebAssembly
 - **Rust (wasm-pack)**
-  - Browser high-performance computing
+  - 브라우저 고performance 연산
 - **AssemblyScript**
-  - TypeScript-style WASM
+  - TypeScript style WASM
 
 ### Embedded / IoT
 - **Rust (embedded-hal)**
-  - Embedded systems
+  - 임베디드 system
 - **C/C++ (Arduino, ESP32)**
-  - IoT devices
+  - IoT 디바이스
 
 ---
 
-## Priority (Phase 1 Support Goals)
+## 우선ranking (1차 support Goal)
 
-Realistically, supporting all stacks is difficult, so priorities based on usage frequency and demand:
+현실적으로 모든 스택을 support하기는 어려우므로, 사용 frequency와 수요를 고려한 우선ranking:
 
-### Tier 1 (Immediate Support)
+### Tier 1 (immediately support)
 1. **Web-Fullstack**
-   - BE: FastAPI (Python) ✅ Already supported
-   - FE: Next.js (React) ✅ Already supported
+   - BE: FastAPI (Python) ✅ 기존 support
+   - FE: Next.js (React) ✅ 기존 support
    - BE: Express.js (Node.js) 🆕
    - BE: NestJS (Node.js) 🆕
 
@@ -341,7 +341,7 @@ Realistically, supporting all stacks is difficult, so priorities based on usage 
    - Click (Python) 🆕
    - Cobra (Go) 🆕
 
-### Tier 2 (Next Phase)
+### Tier 2 (next stage)
 4. **Desktop App**
    - Tauri + React 🆕
    - Electron + React 🆕
@@ -350,7 +350,7 @@ Realistically, supporting all stacks is difficult, so priorities based on usage 
    - npm package (TypeScript) 🆕
    - pip package (Python) 🆕
 
-### Tier 3 (After Demand Confirmation)
+### Tier 3 (수요 confirmation 후)
 6. **Mobile App**
    - React Native 🆕
    - Flutter 🆕
@@ -360,32 +360,32 @@ Realistically, supporting all stacks is difficult, so priorities based on usage 
 
 ---
 
-## Next Steps
+## next stage
 
-Documents to write for each tech stack:
+각 기술 스택별로 must 작성 할 documentation:
 
-1. **Coding Rules** (`.rules/{category}/{stack}.md`)
-   - Directory structure
-   - Architecture patterns
-   - Naming conventions
-   - Security guidelines
-   - Testing strategies
+1. **코딩 룰** (`.rules/{카테고리}/{스택}.md`)
+   - directory Structure
+   - 아키텍처 pattern
+   - 네이밍 컨벤션
+   - 보Plan guide
+   - 테스팅 전략
 
-2. **PM Templates** (`.agents/pm/templates/{type}.md`)
-   - Deliverable format
-   - Specification templates
+2. **PM template** (`.agents/pm/templates/{타입}.md`)
+   - 산출물 형식
+   - specification template
 
-3. **Coding Agent Templates** (`.agents/coding/templates/{type}.md`)
-   - Work order
-   - File creation order
-   - Dependency management
+3. **코딩 agent template** (`.agents/coding/templates/{타입}.md`)
+   - task 순서
+   - file create 순서
+   - 의존성 관리
 
-4. **QA Templates** (`.agents/qa/templates/{type}.md`)
-   - Testing frameworks
-   - Test structure
-   - Coverage goals
+4. **QA template** (`.agents/qa/templates/{타입}.md`)
+   - test framework
+   - test Structure
+   - coverage Goal
 
 ---
 
-**Written**: 2026-03-12
-**Version**: v0.0.1-draft
+**작성 일시**: 2026-03-12
+**version**: v0.0.1-draft

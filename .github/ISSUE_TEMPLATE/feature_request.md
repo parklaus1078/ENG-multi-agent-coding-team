@@ -1,30 +1,30 @@
 ---
-name: Feature Request
-about: Suggest a new idea or improvement
+name: feature 제Plan
+about: new운 ID어나 improvement 사항을 제Plan
 title: "[Feature] "
 labels: enhancement
 assignees: ""
 ---
 
-## What problem does this solve?
+## 어떤 problem를 solution하나요?
 
-Describe the problem or limitation you're experiencing.
-
----
-
-## Proposed Solution
-
-How should it work?
+겪고 있는 problem나 제한 사항을 description해 주세요.
 
 ---
 
-## Alternatives Considered
+## 제Plan하는 solution 방법
 
-If there are other approaches, describe them here.
+어떻게 action하면 좋을까요?
 
 ---
 
-## Which part of the project does this affect?
+## 고려한 대Plan
+
+다른 접근 방식이 있다면 적어 주세요.
+
+---
+
+## project의 어떤 part에 영향을 주나요?
 
 - [ ] Project Planner agent
 - [ ] PM agent
@@ -33,11 +33,11 @@ If there are other approaches, describe them here.
 - [ ] `scripts/`
 - [ ] `.rules/`
 - [ ] `.agents/`
-- [ ] Documentation
-- [ ] Other: 
+- [ ] documentation
+- [ ] other: 
 
 ---
 
-## Additional Context
+## add 맥락
 
-Add mockups, examples, or references if available.
+reference할 목업, yes시, 레퍼런스가 있다면 적어 주세요.

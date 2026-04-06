@@ -1,0 +1,43 @@
+{
+  "version": "0.0.1",
+  "updated": "2026-03-19",
+  "description": "PR review history and recurring issue tracking",
+
+  "project": "multi-agent-coding-team",
+
+  "common_issues": [],
+
+  "approval_criteria": {
+    "min_coverage": 80,
+    "max_complexity": 10,
+    "max_function_length": 50,
+    "block_without_tests": true,
+    "min_coverage_delta": -5
+  },
+
+  "review_statistics": {
+    "total_reviews": 0,
+    "total_prs": 0,
+    "approval_rate": 0.0,
+    "avg_issues_per_pr": 0.0,
+    "auto_fix_success_rate": 0.0
+  },
+
+  "issue_frequency": {
+    "hardcoded_secret": 0,
+    "missing_tests": 0,
+    "function_too_long": 0,
+    "magic_number": 0,
+    "sql_injection": 0,
+    "xss": 0,
+    "todo_fixme": 0
+  },
+
+  "auto_fix_history": [],
+
+  "learning_notes": [
+    "Initial setup - before PR review starts",
+    "Recurring issues automatically added to common_issues",
+    "Project-specific approval_criteria can be adjusted"
+  ]
+}

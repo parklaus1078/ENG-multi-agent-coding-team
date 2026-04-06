@@ -1,0 +1,39 @@
+{
+  "version": "0.0.1",
+  "updated": "2026-03-19",
+  "description": "Verified best practices - successful decisions and implementation patterns",
+
+  "successes": [],
+
+  "success_template": {
+    "id": "success_XXX",
+    "ticket": "PLAN-XXX",
+    "agent": "pm | coding | qa",
+    "timestamp": "2026-03-19T10:30:00Z",
+    "decision": "Decision made",
+    "outcome": "Result (why was it judged as success)",
+    "verification_method": "test passed | user approval | code review passed",
+    "confidence_score": 0.0,
+    "actual_confidence": 0.0,
+    "context": "Situation at the time of decision",
+    "why_it_worked": "Success factors",
+    "reusable": true,
+    "pattern_id": "Pattern ID added to patterns.json (if applicable)",
+    "related_tickets": [],
+    "notes": "Additional notes"
+  },
+
+  "statistics": {
+    "total_successes": 0,
+    "by_agent": {
+      "pm": 0,
+      "coding": 0,
+      "qa": 0,
+      "project-planner": 0
+    },
+    "high_confidence_successes": 0,
+    "low_confidence_surprises": 0,
+    "patterns_extracted": 0,
+    "last_success_date": null
+  }
+}

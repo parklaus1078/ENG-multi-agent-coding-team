@@ -47,13 +47,13 @@
 
   "comments": {
     "version": "v0.0.2 - Tech Stack Agnostic Multi-Agent System",
-    "base_branch": "Base branch for PM/Coding agents when creating new branches (e.g., main, dev)",
-    "qa_strategy": "QA agent creates test branch based on feature branch of same ticket",
+    "base_branch": "Base branch for PM/Coding agents to use when creating new branches (e.g., main, dev)",
+    "qa_strategy": "QA agent creates test branch based on the feature branch of the same ticket",
     "branch_flow": "main/dev → feature/PLAN-XXX → test/PLAN-XXX",
     "naming_convention": "{ticket-number} and {slug} are automatically replaced",
-    "auto_create": "Whether to auto-create branch if it doesn't exist",
-    "auto_checkout": "Whether to auto-checkout branch",
-    "auto_commit": "Whether to auto-commit after work completion (false recommended - human review before commit)",
-    "auto_push": "Whether to auto-push (false recommended - human review before push)"
+    "auto_create": "Whether to automatically create branch if it doesn't exist",
+    "auto_checkout": "Whether to automatically checkout the branch",
+    "auto_commit": "Whether to auto-commit after work completion (false recommended - manual review before commit)",
+    "auto_push": "Whether to auto-push (false recommended - manual review before push)"
   }
 }

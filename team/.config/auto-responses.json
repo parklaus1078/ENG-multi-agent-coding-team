@@ -1,0 +1,211 @@
+{
+  "version": "0.0.1",
+  "description": "Rules for automatically responding to agent questions in auto-pipeline. Managed as data instead of hardcoding.",
+  "updated": "2026-03-19",
+
+  "pm": {
+    "patterns": [
+      {
+        "id": "prevent-scope-creep",
+        "trigger": "(feature|implementation|endpoint|screen|API).*(add|include).*should I|.*(add|include).*(feature|implementation|endpoint|screen|API).*should I",
+        "response": "no, please proceed within the ticket scope only. Record additional features in the Out-of-Scope section only.",
+        "reason": "scope_creep_prevention",
+        "gotcha_ref": "gotchas.md#1",
+        "confidence": 0.95,
+        "examples": [
+          "Should we also add OAuth functionality?",
+          "Should we implement password reset feature too?"
+        ]
+      },
+      {
+        "id": "prevent-tech-change",
+        "trigger": "(change|switch|different).*(technology|library|framework).*should I",
+        "response": "no, please proceed according to the current specification. The tech stack follows .project-meta.json.",
+        "reason": "tech_stack_consistency",
+        "confidence": 0.98,
+        "examples": [
+          "Should we change to GraphQL?",
+          "Should we use a different UI library?"
+        ]
+      },
+      {
+        "id": "handle-ambiguity",
+        "trigger": "(vague|ambiguous|unclear|uncertain|not clear)",
+        "response": "Please make a reasonable judgment based on the ticket's Acceptance Criteria, and record the decision rationale in detail in the log. Also record risk level and confidence level.",
+        "reason": "ambiguity_handling",
+        "gotcha_ref": "gotchas.md#1",
+        "confidence": 0.85,
+        "examples": [
+          "This part is ambiguous, what should we do?",
+          "The requirements are unclear"
+        ]
+      },
+      {
+        "id": "confirm-exclusion",
+        "trigger": "(exclude|omit|skip).*should I|is it okay to",
+        "response": "yes, exclude features not specified in the ticket, but make sure to record them in the Out-of-Scope section.",
+        "reason": "explicit_scope_definition",
+        "confidence": 0.90,
+        "examples": [
+          "Can we exclude email verification?",
+          "Can we omit admin features?"
+        ]
+      },
+      {
+        "id": "continue-on-assumption",
+        "trigger": "(assume|presume|infer).*proceed.*should I",
+        "response": "yes, if it's a reasonable assumption, proceed but clearly record the assumption and its rationale in the log.",
+        "reason": "documented_assumption",
+        "confidence": 0.80,
+        "examples": [
+          "Should we assume a default value of 10 and proceed?",
+          "This API is inferred to be a GET method. Should we proceed?"
+        ]
+      }
+    ]
+  },
+
+  "coding": {
+    "patterns": [
+      {
+        "id": "prefer-coding-rules",
+        "trigger": "(better|different|improved).*(pattern|method|approach)",
+        "response": "Prefer patterns specified in coding rules (.rules/). If an alternative is clearly superior, document the rationale in the log and proceed.",
+        "reason": "architecture_consistency",
+        "confidence": 0.92,
+        "examples": [
+          "There's a better pattern, should we use it?",
+          "A different design pattern seems more suitable"
+        ]
+      },
+      {
+        "id": "prevent-over-engineering",
+        "trigger": "(add|extend|generalize).*(structure|abstraction|layer)",
+        "response": "no, implement only what's necessary for the current ticket. Excessive abstraction for the future is prohibited.",
+        "reason": "prevent_over_engineering",
+        "confidence": 0.88,
+        "examples": [
+          "Should we add an extensible structure?",
+          "Should we create a generalized layer?"
+        ]
+      },
+      {
+        "id": "handle-missing-spec",
+        "trigger": "(specification|spec).*missing|not available",
+        "response": "Check the specification (.planning/specs/) first. If it's truly missing, run the PM Agent first.",
+        "reason": "spec_required",
+        "confidence": 0.95,
+        "examples": [
+          "There's no API specification, what should we do?",
+          "The spec is incomplete, should we proceed?"
+        ]
+      },
+      {
+        "id": "ask-about-test",
+        "trigger": "test.*write.*should I",
+        "response": "no, testing is the responsibility of the QA Agent. Focus on implementation only.",
+        "reason": "separation_of_concerns",
+        "confidence": 0.99,
+        "examples": [
+          "Should we also write unit tests?",
+          "Should we create test cases?"
+        ]
+      }
+    ]
+  },
+
+  "qa": {
+    "patterns": [
+      {
+        "id": "require-implementation",
+        "trigger": "implementation.*code.*missing|not available",
+        "response": "Tests cannot be written without implementation code. Run the Coding Agent first.",
+        "reason": "implementation_required",
+        "confidence": 0.99,
+        "examples": [
+          "Should we write tests without implementation code?",
+          "There's no code yet"
+        ]
+      },
+      {
+        "id": "use-project-framework",
+        "trigger": "different.*(test.*framework|library)",
+        "response": "no, use the test framework defined in .project-meta.json.",
+        "reason": "framework_consistency",
+        "confidence": 0.97,
+        "examples": [
+          "Should we use a different test library?",
+          "Should we use Vitest instead of Jest?"
+        ]
+      },
+      {
+        "id": "follow-test-cases",
+        "trigger": "test.*case.*add.*should I",
+        "response": "no, write only the cases defined in planning/test-cases/. If additional cases are needed, only record them in the log.",
+        "reason": "scope_adherence",
+        "confidence": 0.90,
+        "examples": [
+          "Should we add more edge cases?",
+          "Additional tests seem necessary"
+        ]
+      }
+    ]
+  },
+
+  "project-planner": {
+    "patterns": [
+      {
+        "id": "user-approval-required",
+        "trigger": "(plan|ticket).*create.*should I",
+        "response": "yes, but show the plan to the user first and create after receiving approval.",
+        "reason": "user_approval",
+        "confidence": 0.99,
+        "examples": [
+          "Should we create tickets now?",
+          "Should we proceed with this plan?"
+        ]
+      },
+      {
+        "id": "prevent-ticket-bloat",
+        "trigger": "(more granular|more split|further breakdown)",
+        "response": "no, the minimum unit that can be implemented independently is sufficient. Excessive subdivision actually increases complexity.",
+        "reason": "prevent_over_splitting",
+        "confidence": 0.85,
+        "examples": [
+          "Should we subdivide the ticket more?",
+          "Should we split it further?"
+        ]
+      }
+    ]
+  },
+
+  "global": {
+    "description": "Patterns that apply to all agents",
+    "patterns": [
+      {
+        "id": "continue-default",
+        "trigger": "(continue|proceed).*should I",
+        "response": "yes, proceed according to the current plan.",
+        "reason": "default_continue",
+        "confidence": 0.70,
+        "examples": [
+          "Should we continue?",
+          "Is it okay to proceed like this?"
+        ]
+      },
+      {
+        "id": "confirm-completion",
+        "trigger": "(complete|finish|done).*have I",
+        "response": "Upon task completion, always output the message '✅ {Agent} task completed'.",
+        "reason": "completion_marker",
+        "confidence": 0.95
+      }
+    ]
+  },
+
+  "fallback": {
+    "description": "Default response when no pattern matches",
+    "default_response": "Proceed according to the current plan, but record important decisions in the log with rationale.",
+    "confidence": 0.50
+  }
+}

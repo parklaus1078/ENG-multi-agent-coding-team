@@ -1,0 +1,104 @@
+{
+  "version": "0.0.1",
+  "updated": "2026-03-19",
+  "description": "Learned decision-making patterns - best practices extracted from past successes",
+
+  "pm": {
+    "pattern_001": {
+      "id": "auth-no-oauth",
+      "trigger": "Ticket mentions 'auth' or 'login', no 'OAuth' specified",
+      "learned_decision": "Implement Email/Password authentication only, record OAuth in Out-of-Scope",
+      "confidence": 0.95,
+      "learned_from": [],
+      "success_rate": "0/0",
+      "last_updated": "2026-03-19",
+      "notes": "Initial pattern - no learning data yet"
+    },
+    "pattern_002": {
+      "id": "form-loading-error",
+      "trigger": "Writing form submission UI spec",
+      "learned_decision": "Always include loading state (spinner/disabled) and error display UI",
+      "confidence": 0.88,
+      "learned_from": [],
+      "success_rate": "0/0",
+      "last_updated": "2026-03-19",
+      "notes": "Common UX pattern"
+    },
+    "pattern_003": {
+      "id": "crud-complete",
+      "trigger": "'Management' feature specification",
+      "learned_decision": "Include complete CRUD (Create, Read, Update, Delete)",
+      "confidence": 0.92,
+      "learned_from": [],
+      "success_rate": "0/0",
+      "last_updated": "2026-03-19",
+      "notes": "'Management' usually means full CRUD"
+    },
+    "pattern_004": {
+      "id": "pagination-default",
+      "trigger": "List view API spec, pagination unspecified",
+      "learned_decision": "Include default pagination parameters (page, limit)",
+      "confidence": 0.85,
+      "learned_from": [],
+      "success_rate": "0/0",
+      "last_updated": "2026-03-19",
+      "notes": "Most lists need pagination"
+    }
+  },
+
+  "coding": {
+    "pattern_001": {
+      "id": "error-handling-required",
+      "trigger": "External API call or DB query code",
+      "learned_decision": "Always use try-catch blocks for error handling",
+      "confidence": 0.98,
+      "learned_from": [],
+      "success_rate": "0/0",
+      "last_updated": "2026-03-19",
+      "notes": "Error handling required"
+    },
+    "pattern_002": {
+      "id": "env-var-secrets",
+      "trigger": "Need for sensitive information like API keys, passwords",
+      "learned_decision": "Reference from environment variables, no hardcoding",
+      "confidence": 0.99,
+      "learned_from": [],
+      "success_rate": "0/0",
+      "last_updated": "2026-03-19",
+      "notes": "Basic security rule"
+    }
+  },
+
+  "qa": {
+    "pattern_001": {
+      "id": "happy-unhappy-path",
+      "trigger": "Writing test cases",
+      "learned_decision": "Include both happy path + exception cases",
+      "confidence": 0.97,
+      "learned_from": [],
+      "success_rate": "0/0",
+      "last_updated": "2026-03-19",
+      "notes": "Basic testing principle"
+    }
+  },
+
+  "global": {
+    "pattern_001": {
+      "id": "read-project-config-first",
+      "trigger": "Starting work",
+      "learned_decision": "Read .project-config.json and .project-meta.json first",
+      "confidence": 0.99,
+      "learned_from": [],
+      "success_rate": "0/0",
+      "last_updated": "2026-03-19",
+      "notes": "Prevents Gotcha #2, #3"
+    }
+  },
+
+  "learning_metadata": {
+    "total_patterns": 10,
+    "last_learning_run": null,
+    "next_learning_scheduled": null,
+    "learning_algorithm_version": "0.0.1"
+  }
+}

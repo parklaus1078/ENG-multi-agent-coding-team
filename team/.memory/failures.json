@@ -1,0 +1,41 @@
+{
+  "version": "0.0.1",
+  "updated": "2026-03-19",
+  "description": "Cataloged failure cases - record of problems encountered and solutions applied",
+
+  "failures": [],
+
+  "failure_template": {
+    "id": "failure_XXX",
+    "ticket": "PLAN-XXX",
+    "agent": "pm | coding | qa",
+    "timestamp": "2026-03-19T10:30:00Z",
+    "symptom": "Observed symptom (what went wrong)",
+    "root_cause": "Root cause (why it happened)",
+    "detection_method": "manual review | test failure | validation skill | user feedback",
+    "impact": "low | medium | high",
+    "fix_applied": "Solution applied",
+    "gotcha_created": "gotchas.md#XX (if applicable)",
+    "prevented_count": 0,
+    "related_tickets": [],
+    "notes": "Additional notes"
+  },
+
+  "statistics": {
+    "total_failures": 0,
+    "by_agent": {
+      "pm": 0,
+      "coding": 0,
+      "qa": 0,
+      "project-planner": 0
+    },
+    "by_impact": {
+      "low": 0,
+      "medium": 0,
+      "high": 0
+    },
+    "resolved_count": 0,
+    "recurring_failures": 0,
+    "last_failure_date": null
+  }
+}

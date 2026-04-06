@@ -1,0 +1,83 @@
+{
+  "version": "0.0.1",
+  "updated": "2026-03-19",
+  "description": "Project-specific refactoring patterns and code smell learning data",
+
+  "project": "multi-agent-coding-team",
+
+  "applied_patterns": [],
+
+  "common_smells": [
+    {
+      "smell": "long_method",
+      "threshold": 50,
+      "frequency": 0,
+      "avg_length": 0,
+      "description": "Function length > 50 lines"
+    },
+    {
+      "smell": "duplicate_code",
+      "threshold": 6,
+      "frequency": 0,
+      "description": "Duplicate code > 6 lines"
+    },
+    {
+      "smell": "magic_number",
+      "threshold": 2,
+      "frequency": 0,
+      "description": "Number literals with 2+ digits"
+    },
+    {
+      "smell": "god_object",
+      "threshold_lines": 300,
+      "threshold_methods": 20,
+      "frequency": 0,
+      "description": "Class > 300 lines or > 20 methods"
+    },
+    {
+      "smell": "n_plus_one",
+      "frequency": 0,
+      "description": "Query inside loop"
+    }
+  ],
+
+  "refactoring_patterns": {
+    "extract_function": {
+      "count": 0,
+      "avg_complexity_reduction": 0,
+      "success_rate": 0.0
+    },
+    "replace_conditional": {
+      "count": 0,
+      "avg_complexity_reduction": 0,
+      "success_rate": 0.0
+    },
+    "simplify_conditional": {
+      "count": 0,
+      "avg_complexity_reduction": 0,
+      "success_rate": 0.0
+    },
+    "replace_loop_with_pipeline": {
+      "count": 0,
+      "avg_performance_gain": 0,
+      "success_rate": 0.0
+    }
+  },
+
+  "metrics": {
+    "total_files_analyzed": 0,
+    "total_issues_found": 0,
+    "total_auto_fixed": 0,
+    "avg_complexity_before": 0.0,
+    "avg_complexity_after": 0.0,
+    "improvement_percentage": 0.0
+  },
+
+  "auto_fix_history": [],
+
+  "learning_notes": [
+    "Initial setup - before analysis starts",
+    "Adjust common_smells if project-specific thresholds needed",
+    "Update metrics periodically to track improvement"
+  ]
+}

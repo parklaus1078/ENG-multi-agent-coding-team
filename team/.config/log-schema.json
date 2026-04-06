@@ -1,0 +1,239 @@
+{
+  "version": "0.0.1",
+  "updated": "2026-03-19",
+  "description": "Structured decision-making log schema - records agent decision processes for learning",
+
+  "log_structure": {
+    "metadata": {
+      "required": true,
+      "fields": {
+        "agent": {
+          "type": "string",
+          "description": "Agent name (pm, coding, qa, project-planner)",
+          "required": true
+        },
+        "ticket": {
+          "type": "string",
+          "description": "Ticket number (PLAN-001)",
+          "required": true
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "ISO8601",
+          "description": "Task start time",
+          "required": true
+        },
+        "decision_count": {
+          "type": "number",
+          "description": "Number of decisions made",
+          "required": true
+        },
+        "completion_status": {
+          "type": "string",
+          "enum": ["success", "partial", "failed"],
+          "required": true
+        }
+      }
+    },
+
+    "decisions": {
+      "required": true,
+      "description": "List of decisions (array)",
+      "item_schema": {
+        "id": {
+          "type": "string",
+          "description": "Unique decision ID (D-001)",
+          "required": true
+        },
+        "title": {
+          "type": "string",
+          "description": "Decision title (e.g., Exclude OAuth)",
+          "required": true
+        },
+        "context": {
+          "type": "string",
+          "description": "Situation that required the decision",
+          "required": true
+        },
+        "options": {
+          "type": "array",
+          "description": "Options considered",
+          "required": true
+        },
+        "selected": {
+          "type": "string",
+          "description": "Selected option",
+          "required": true
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason for selection (detailed)",
+          "required": true
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "Risk level (impact if wrong)",
+          "required": true
+        },
+        "confidence": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "description": "Confidence level (0.0-1.0)",
+          "required": true
+        },
+        "gotcha_applied": {
+          "type": "string",
+          "description": "Gotcha applied (gotchas.md#1)",
+          "required": false
+        },
+        "outcome": {
+          "type": "string",
+          "enum": ["unknown", "correct", "incorrect", "suboptimal"],
+          "description": "Post-evaluation (update later)",
+          "required": false
+        }
+      }
+    },
+
+    "gotchas_applied": {
+      "required": true,
+      "description": "List of gotchas applied",
+      "type": "array",
+      "items": {
+        "gotcha_id": "string",
+        "gotcha_title": "string",
+        "how_applied": "string"
+      }
+    },
+
+    "patterns_observed": {
+      "required": false,
+      "description": "Observed patterns (for future learning)",
+      "type": "array",
+      "items": {
+        "pattern": "string",
+        "frequency": "string",
+        "confidence": "number"
+      }
+    },
+
+    "auto_responses_triggered": {
+      "required": false,
+      "description": "Auto-response rules triggered",
+      "type": "array",
+      "items": {
+        "rule_id": "string",
+        "trigger": "string",
+        "response": "string"
+      }
+    },
+
+    "issues_encountered": {
+      "required": false,
+      "description": "Issues encountered (future gotcha candidates)",
+      "type": "array",
+      "items": {
+        "issue": "string",
+        "severity": "string",
+        "resolution": "string"
+      }
+    }
+  },
+
+  "logging_guidelines": {
+    "when_to_log_decision": [
+      "When interpreting items not specified in the ticket",
+      "When choosing one option among multiple",
+      "When applying a gotcha rule",
+      "When making assumptions with medium or higher risk level",
+      "When judging in-scope/out-of-scope"
+    ],
+    "when_NOT_to_log": [
+      "Obvious decisions (exactly as specified in ticket)",
+      "Simple repetitive tasks (file creation, etc.)",
+      "Automated processing (template application)"
+    ],
+    "confidence_scoring": {
+      "0.9-1.0": "Specified in ticket, or clear gotcha rule application",
+      "0.7-0.9": "Reasonable inference, industry standard pattern",
+      "0.5-0.7": "Includes assumptions, user confirmation recommended",
+      "0.0-0.5": "Uncertain, need to ask user"
+    },
+    "risk_scoring": {
+      "low": "Easy to fix if wrong, small scope of impact",
+      "medium": "Requires rework, affects other parts",
+      "high": "Major rework, architectural changes, high cost"
+    }
+  },
+
+  "example_log": {
+    "metadata": {
+      "agent": "pm",
+      "ticket": "PLAN-001",
+      "timestamp": "2026-03-19T10:30:00Z",
+      "decision_count": 2,
+      "completion_status": "success"
+    },
+    "decisions": [
+      {
+        "id": "D-001",
+        "title": "Exclude OAuth",
+        "context": "Ticket specifies 'login', method unspecified",
+        "options": ["Email/Password only", "OAuth", "Both"],
+        "selected": "Email/Password only",
+        "reason": "Acceptance Criteria specifies 'login with email/password'. OAuth not mentioned.",
+        "risk_level": "low",
+        "confidence": 0.95,
+        "gotcha_applied": "gotchas.md#1",
+        "outcome": "unknown"
+      },
+      {
+        "id": "D-002",
+        "title": "Exclude password reset",
+        "context": "Not in ticket but common pattern",
+        "options": ["Include", "Exclude", "Ask user"],
+        "selected": "Exclude",
+        "reason": "Applying Gotcha #1 (prevent scope expansion). Not specified in ticket, so record in Out-of-Scope.",
+        "risk_level": "medium",
+        "confidence": 0.70,
+        "gotcha_applied": "gotchas.md#1",
+        "outcome": "unknown"
+      }
+    ],
+    "gotchas_applied": [
+      {
+        "gotcha_id": "1",
+        "gotcha_title": "Scope Creep",
+        "how_applied": "After checking ticket Acceptance Criteria, excluded OAuth and password reset which were not specified"
+      }
+    ],
+    "patterns_observed": [
+      {
+        "pattern": "When user says 'auth', it's likely to mean only login/logout",
+        "frequency": "this ticket",
+        "confidence": 0.8
+      }
+    ],
+    "auto_responses_triggered": [
+      {
+        "rule_id": "prevent-scope-creep",
+        "trigger": "Should I also add OAuth feature?",
+        "response": "no, please proceed only within ticket scope."
+      }
+    ],
+    "issues_encountered": []
+  },
+
+  "output_format": {
+    "json": {
+      "path": "projects/{project}/logs/{agent}/{timestamp}-{ticket}.json",
+      "description": "For machine analysis"
+    },
+    "markdown": {
+      "path": "projects/{project}/logs/{agent}/{timestamp}-{ticket}.md",
+      "description": "For human reading"
+    }
+  }
+}
